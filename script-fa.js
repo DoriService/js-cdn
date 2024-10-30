@@ -696,7 +696,6 @@
             if (messages.length === 0) return;
 
             const lastMessage = messages[messages.length - 1];
-            console.log(lastMessage);
             
             if (typeof marked !== 'undefined') {
                 // Parse the new content as Markdown
@@ -771,7 +770,6 @@
 
                             try {
                                 const parsed = JSON.parse(jsonString);
-                                console.log(parsed);
                                 if (parsed.thread_id) {
                                     threadId = parsed.thread_id;
                                     THREAD_ID = threadId;
@@ -784,7 +782,6 @@
                                         updateLastAssistantMessage(fullMessage);
                                     }
                                 } else if (parsed.products) {
-                                    console.log(parsed.products);
                                     appendProducts(parsed.products);
                                 }
                             } catch (err) {
@@ -798,7 +795,6 @@
                         if (buffer.endsWith('}')) {
                             try {
                                 const parsed = JSON.parse(buffer);
-                                console.log(parsed);
                                 if (parsed.thread_id) {
                                     threadId = parsed.thread_id;
                                     THREAD_ID = threadId;
@@ -811,7 +807,6 @@
                                         updateLastAssistantMessage(fullMessage);
                                     }
                                 } else if (parsed.products) {
-                                    console.log(parsed.products);
                                     appendProducts(parsed.products);
                                 }
                                 buffer = "";
@@ -900,12 +895,12 @@
     }
     botData = await fetchBotDataBySharingID(SHARING_ID);
     if (botData.error) {
-        console.log(botData.error);
+        
         errorMessage.innerHTML = botData.error;
     } else if (botData.data) {
         initChatWidget(botData.data);
     }else{
-        console.log("No data found");
+        
         errorMessage.innerHTML = "No data found";
     }
 })();

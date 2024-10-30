@@ -837,12 +837,12 @@
     }
     botData = await fetchBotDataBySharingID(SHARING_ID);
     if (botData.error) {
-        console.log(botData.error);
+        
         errorMessage.innerHTML = botData.error;
     } else if (botData.data) {
         initChatWidget(botData.data);
     }else{
-        console.log("No data found");
+        
         errorMessage.innerHTML = "No data found";
     }
 })();
