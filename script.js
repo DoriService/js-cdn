@@ -531,9 +531,9 @@
         poweredByLink.style.display = 'flex';
         poweredByLink.style.alignItems = 'center';
         poweredByLink.style.justifyContent = 'center';
-        poweredByLink.innerHTML = `<img src="https://dori.tech/assets/logo-BPyoLtnV.png" width="36" height="18" alt="Dori Logo">&nbsp;&nbsp;<span style="color: #666;">Powered by</span>`;
-        poweredBy.appendChild(poweredByLink);
+        poweredByLink.innerHTML = `<span style="color: #666;">Powered by</span>&nbsp;&nbsp;<img src="https://dori.tech/assets/logo-BPyoLtnV.png" width="36" height="18" alt="Dori Logo">`;
         chatBox.appendChild(poweredBy);
+        poweredBy.appendChild(poweredByLink);
         chatBox.appendChild(chatInputContainer);
 
         container.appendChild(chatBox);
@@ -634,37 +634,41 @@
             messageElement.classList.add('message');
             
             if (sender === 'user') {
-                messageWrapper.classList.add('user-message-wrapper');
-                messageElement.classList.add('user-message');
-            } else if (sender === 'bot') {
-                messageWrapper.classList.add('bot-message-wrapper');
-                messageElement.classList.add('bot-message');
+        messageWrapper.classList.add('user-message-wrapper');
+        messageElement.classList.add('user-message');
+    } else if (sender === 'bot') {
+        messageWrapper.classList.add('bot-message-wrapper');
+        messageElement.classList.add('bot-message');
 
-                // Create avatar image
-                const avatar = document.createElement('img');
-                avatar.classList.add('avatar');
-                avatar.src = botData.bot_image || 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541';
-                avatar.alt = 'Bot Avatar';
+        // Create avatar image
+        const avatar = document.createElement('img');
+        avatar.classList.add('avatar');
+        avatar.src = botData.bot_image || 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541';
+        avatar.alt = 'Bot Avatar';
 
-                messageWrapper.appendChild(avatar);
-            } else if (sender === 'system') {
-                messageElement.classList.add('system-message');
-            }
+        messageWrapper.appendChild(avatar);
+    } else if (sender === 'system') {
+        messageElement.classList.add('system-message');
+    }
 
-            // Check if marked.js is loaded
-            if (typeof marked !== 'undefined') {
-                // Parse Markdown content to HTML
-                const htmlContent = marked.parse(content);
-                messageElement.innerHTML = htmlContent;
-            } else {
-                // Fallback to plain text if marked.js isn't loaded
-                messageElement.textContent = content;
-            }
+    // Check if marked.js is loaded
+    if (typeof marked !== 'undefined') {
+        // Parse Markdown content to HTML
+        const htmlContent = marked.parse(content);
+        messageElement.innerHTML = htmlContent;
+    } else {
+        // Fallback to plain text if marked.js isn't loaded
+        messageElement.textContent = content;
+    }
 
-            messageWrapper.appendChild(messageElement);
-            chatMessages.appendChild(messageWrapper);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+    messageWrapper.appendChild(messageElement);
+    chatMessages.appendChild(messageWrapper);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    // Return the message element for future updates
+            return messageElement;
         }
+
 
 
         // Append Products to Chat
@@ -708,37 +712,137 @@
         // Expose scrollCarousel globally
         window.scrollCarousel = scrollCarousel;
 
+         function updateLastAssistantMessage(newContent) {
+            const messages = chatMessages.querySelectorAll('.bot-message');
+            if (messages.length === 0) return;
+
+            const lastMessage = messages[messages.length - 1];
+            
+            if (typeof marked !== 'undefined') {
+                // Parse the new content as Markdown
+                const parsedContent = marked.parse(newContent);
+                // Set the entire content of the message
+                lastMessage.innerHTML = parsedContent;
+            } else {
+                // If marked.js is not available, set the text content directly
+                lastMessage.textContent = newContent;
+            }
+
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
         // Call API Function
         async function callApi(message) {
             try {
                 sendButton.disabled = true;
                 appendMessage('system', 'Typing...');
-                
-                const response = await fetch(API_URL, {
-                    method: 'POST',
+
+                const requestBody = {
+                    assistant_id: ASSISTANT_ID,
+                    thread_id: THREAD_ID,
+                    message: message,
+                };
+
+                // Remove undefined properties
+                Object.keys(requestBody).forEach(
+                    (key) => requestBody[key] === undefined && delete requestBody[key]
+                );
+
+                const queryParams = new URLSearchParams({
+                    assistant_id: ASSISTANT_ID,
+                }).toString();
+                const url = `${API_URL}?${queryParams}`;
+
+                const response = await fetch(url, {
+                    method: "POST",
                     headers: {
-                        'Content-Type': 'application/json'
+                        Accept: "application/json",
+                        "Content-Type": "application/json",
                     },
-                    body: JSON.stringify({
-                        assistant_id: ASSISTANT_ID,
-                        thread_id: THREAD_ID,
-                        message: message
-                    })
+                    body: JSON.stringify(requestBody),
                 });
 
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                if (!response.body) {
+                    throw new Error("ReadableStream not supported in this environment.");
                 }
 
-                const data = await response.json();
-                
-                // Remove the 'typing' message
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder("utf-8");
+                let doneReading = false;
+                let threadId = THREAD_ID;
+                let buffer = ""; // Buffer to accumulate incoming data
+                let currentBotMessage = null; // Reference to the current bot message
+                let fullMessage = ""; // Variable to store the full message
                 removeLastSystemMessage();
 
-                processResponse(data);
+                while (!doneReading) {
+                    const { value, done } = await reader.read();
+                    doneReading = done;
+                    if (value) {
+                        const decoded = decoder.decode(value, { stream: true });
+                        buffer += decoded;
+
+                        let boundary = buffer.indexOf('}{');
+                        while (boundary !== -1) {
+                            const jsonString = buffer.slice(0, boundary + 1); // Include the first '}'
+                            buffer = buffer.slice(boundary + 1); // Remove parsed part
+
+                            try {
+                                const parsed = JSON.parse(jsonString);
+                                if (parsed.thread_id) {
+                                    threadId = parsed.thread_id;
+                                    THREAD_ID = threadId;
+                                    sessionStorage.setItem('thread_id', THREAD_ID);
+                                } else if (parsed.text) {
+                                    fullMessage += parsed.text; // Accumulate the full message
+                                    if (!currentBotMessage) {
+                                        currentBotMessage = appendMessage('bot', fullMessage);
+                                    } else {
+                                        updateLastAssistantMessage(fullMessage);
+                                    }
+                                } else if (parsed.products) {
+                                    console.log(parsed.products);
+                                    appendProducts(parsed.products);
+                                }
+                            } catch (err) {
+                                console.error("Failed to parse JSON:", err);
+                            }
+
+                            boundary = buffer.indexOf('}{');
+                        }
+
+                        // Attempt to parse the remaining buffer if it ends with '}'
+                        if (buffer.endsWith('}')) {
+                            try {
+                                const parsed = JSON.parse(buffer);
+                                if (parsed.thread_id) {
+                                    threadId = parsed.thread_id;
+                                    THREAD_ID = threadId;
+                                    sessionStorage.setItem('thread_id', THREAD_ID);
+                                } else if (parsed.text) {
+                                    fullMessage += parsed.text; // Accumulate the full message
+                                    if (!currentBotMessage) {
+                                        currentBotMessage = appendMessage('bot', fullMessage);
+                                    } else {
+                                        updateLastAssistantMessage(fullMessage);
+                                    }
+                                } else if (parsed.products) {
+                                    appendProducts(parsed.products);
+                                }
+                                buffer = "";
+                            } catch (err) {
+                                console.error("Failed to parse JSON:", err);
+                                // Keep the buffer for the next read if parsing fails
+                            }
+                        }
+                    }
+                }
+
+                currentBotMessage = null; // Reset for the next message
+
             } catch (error) {
                 console.error('Error:', error);
-                appendMessage('system', 'Sorry, an error occurred. Please try again.');
+                appendMessage('system', 'an unexpected error occurred, please try again later.');
             } finally {
                 sendButton.disabled = false;
             }
