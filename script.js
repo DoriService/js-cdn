@@ -430,7 +430,7 @@
             .user-message,
             .bot-message,
             .system-message {
-                text-align: right;
+                text-align: left;
             }
 
             /* "Powered by Dori" Styles */
