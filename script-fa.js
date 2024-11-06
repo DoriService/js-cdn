@@ -880,7 +880,7 @@
     }
     async function fetchBotDataBySharingID(sharingID) {
         try {
-            const url = 'https://demoapi.dori.style/bot-sharing-data/' + sharingID;
+            const url = 'https://demoapi.dori.tech/bot-sharing-data/' + sharingID;
             const response = await fetch(url);
             if (response.status !== 200) {
                 throw new Error('Network response was not ok');
