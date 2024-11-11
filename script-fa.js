@@ -415,7 +415,6 @@
                 box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
                 border-radius: 25px;
                 display: inline-block;
-                margin: 10px 0;
                 cursor: pointer;
                 align-self: center;
                 transition: background-color 0.3s, box-shadow 0.3s;
@@ -547,7 +546,8 @@
         // Chat Functionality
         const API_URL = botData.route + '/stream-chat-with-assistant/';
         const ASSISTANT_ID = botData.assistant_id;
-        let THREAD_ID = sessionStorage.getItem('thread_id') || null;
+        // let THREAD_ID = sessionStorage.getItem('thread_id') || null;
+        let THREAD_ID = null;
 
 
         // Event Listeners
@@ -572,23 +572,43 @@
                 displaySuggestedReply();
             }
         }
-
         function displaySuggestedReply() {
             if (botData.suggestedReply) {
-                const suggestedReplyElement = document.createElement('div');
-                suggestedReplyElement.id = 'suggested-reply';
-                suggestedReplyElement.textContent = botData.suggestedReply;
-                suggestedReplyElement.addEventListener('click', () => {
-                    // Send the suggested reply as user's message
-                    appendMessage('user', botData.suggestedReply);
-                    // Hide the suggested reply
-                    suggestedReplyElement.style.display = 'none';
-                    // Call API with the suggested reply
-                    callApi(botData.suggestedReply);
-                });
-                chatMessages.appendChild(suggestedReplyElement);
+                try {
+                    // Try to parse as JSON in case it's a stringified array
+                    const replies = JSON.parse(botData.suggestedReply);
+                    
+                    // If it's an array, display multiple suggested replies
+                    if (Array.isArray(replies)) {
+                        replies.forEach(reply => {
+                            createSuggestedReplyElement(reply);
+                        });
+                    }
+                } catch (e) {
+                    // If parsing fails, treat it as a single reply string
+                    createSuggestedReplyElement(botData.suggestedReply);
+                }
+                
                 chatMessages.scrollTop = chatMessages.scrollHeight;
             }
+        }
+
+        function createSuggestedReplyElement(replyText) {
+            const suggestedReplyElement = document.createElement('div');
+            suggestedReplyElement.id = 'suggested-reply';
+            suggestedReplyElement.textContent = replyText;
+            suggestedReplyElement.addEventListener('click', () => {
+                // Send the suggested reply as user's message
+                appendMessage('user', replyText);
+                // Hide all suggested replies
+                const allSuggestions = chatMessages.querySelectorAll('#suggested-reply');
+                allSuggestions.forEach(suggestion => {
+                    suggestion.style.display = 'none';
+                });
+                // Call API with the suggested reply
+                callApi(replyText);
+            });
+            chatMessages.appendChild(suggestedReplyElement);
         }
 
 
@@ -824,6 +844,8 @@
 
             } catch (error) {
                 console.error('Error:', error);
+                // remove localstorage thread_id
+                sessionStorage.removeItem('thread_id');
                 appendMessage('system', 'متأسفیم، خطایی رخ داد. لطفاً دوباره تلاش کنید.');
             } finally {
                 sendButton.disabled = false;
