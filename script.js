@@ -544,7 +544,8 @@
         // Chat Functionality
         const API_URL = botData.route + '/stream-chat-with-assistant/';
         const ASSISTANT_ID = botData.assistant_id;
-        let THREAD_ID = sessionStorage.getItem('thread_id') || null;
+        // let THREAD_ID = sessionStorage.getItem('thread_id') || null;
+        let THREAD_ID = null;
 
 
         // Event Listeners
