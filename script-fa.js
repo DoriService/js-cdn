@@ -520,7 +520,6 @@
 
         chatBox.appendChild(chatHeader);
         chatBox.appendChild(chatMessages);
-        // Add "Powered by Dori" footer
         const poweredBy = document.createElement('div');
         poweredBy.id = 'powered-by-dori';
         let logo = `<svg width="55" height="21" viewBox="0 0 72 36" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -531,9 +530,20 @@
                 <stop offset="1" stop-color="#71B6DE"/>
                 </linearGradient>
                 </defs>
-                </svg>
-        `;
-        poweredBy.innerHTML = `${logo} Powered by `;
+                </svg>`;
+
+        // Create a link element
+        const doriLink = document.createElement('a');
+        doriLink.href = 'https://dori.tech';
+        doriLink.target = '_blank';
+        doriLink.style.textDecoration = 'none';
+        doriLink.style.color = 'inherit';
+        doriLink.style.display = 'flex';
+        doriLink.style.alignItems = 'center';
+        doriLink.style.gap = '4px';
+        doriLink.innerHTML = `${logo} Powered by Dori`;
+
+        poweredBy.appendChild(doriLink);
         chatBox.appendChild(poweredBy);
         chatBox.appendChild(chatInputContainer);
         
