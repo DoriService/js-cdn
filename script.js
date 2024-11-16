@@ -910,7 +910,7 @@
         // Initialize Chat Widget
         async function initChat() {
             // get history of messages
-            const history = await fetchHistory();
+            // const history = await fetchHistory();
             // console.log(history);
             // // // append history to chat
             // // history.response.response.forEach(message => {
