@@ -440,7 +440,7 @@
         `;
         document.head.appendChild(style);
         // const isRTL = botData.isRTL;
-        const isRTL = false;
+        const isRTL = botData.isRTL;
 
         // Load marked.js for Markdown parsing
         const markdownScript = document.createElement('script');
