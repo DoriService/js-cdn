@@ -2,6 +2,7 @@
     function initChatWidget(botData) {
         // Inject Styles
         const style = document.createElement('style');
+        const isRTL = botData.isRTL;
         style.textContent = `
             :root {
                 --primary-green: #1b5556;
