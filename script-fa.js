@@ -441,13 +441,7 @@
         document.head.appendChild(style);
         // const isRTL = botData.isRTL;
         const isRTL = botData.isRTL ?? false; // Default to true if not specified
-        const uiText = {
-            "buttonText":"ارسال",
-            "inputPlaceholder":"پیام خود را بنویسید...",
-            "chatWithUs":"چت با ما",
-            "typing":"در حال تایپ...",
-            "error":"متأسفیم، خطایی رخ داد. لطفاً دوباره تلاش کنید."
-        }
+        const uiText = botData.texts;
 
         // Load marked.js for Markdown parsing
         const markdownScript = document.createElement('script');
