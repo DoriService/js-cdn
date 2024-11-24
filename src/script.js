@@ -461,7 +461,6 @@
                     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
                     border-radius: 25px;
                     display: inline-block;
-                    margin: 10px 0;
                     cursor: pointer;
                     align-self: center;
                     transition: background-color 0.3s, box-shadow 0.3s;
