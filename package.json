@@ -1,0 +1,20 @@
+{
+  "name": "dori-chat-widget",
+  "version": "1.0.1",
+  "description": "Dori Chat Widget",
+  "main": "dist/script.js",
+  "scripts": {
+    "build": "webpack --mode production"
+  },
+  "keywords": ["chat", "widget", "dori"],
+  "author": "Dori Tech",
+  "license": "MIT",
+  "dependencies": {
+    "marked": "^9.1.5"
+  },
+  "devDependencies": {
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.4",
+    "terser-webpack-plugin": "^5.3.9"
+  }
+}
