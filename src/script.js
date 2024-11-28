@@ -779,6 +779,7 @@
                                         <a href="${product.url}" target="_blank">
                                             <img src="${product.image}" alt="${product.name}" class="product-image">
                                             <div class="product-info">
+                                                <div class="product-name">${product.name}</div>
                                                 <div class="product-price">${Number(product.price).toLocaleString()} ${botData.currency}</div>
                                             </div>
                                         </a>
