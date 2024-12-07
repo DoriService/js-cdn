@@ -858,6 +858,13 @@
                         body: JSON.stringify(requestBody),
                     });
 
+                    // Handle 429 error specifically
+                    if (response.status === 429) {
+                        removeLastSystemMessage();
+                        appendMessage('system', `⚠️ ${uiText.rateLimitError || 'You have exceeded the rate limit. Please wait at least 24 hours before trying again.'}`);
+                        return;
+                    }
+
                     if (!response.body) {
                         throw new Error("ReadableStream not supported in this environment.");
                     }
@@ -947,6 +954,7 @@
                         }
                     });
                     sessionStorage.removeItem('thread_id');
+                    removeLastSystemMessage();
                     appendMessage('system', uiText.error);
                 } finally {
                     sendButton.disabled = false;
