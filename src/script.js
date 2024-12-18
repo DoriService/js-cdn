@@ -65,9 +65,24 @@
             
             style.textContent = `
                 :root {
-                    --primary-green: ${customization.theme_color};
-                    --hover-green: ${customization.theme_color};
-                    --creamy: ${customization.theme === 'light' ? '#f7eeeb' : '#2D3748'};
+                    --primary-color: ${customization.theme_color};
+                    --hover-color: ${customization.theme_color}dd;
+                    --creamy: ${customization.theme === 'light' ? '#FFFFFF' : '#1F2937'};
+                    --text-color: ${customization.theme === 'light' ? '#2D3748' : '#F9FAFB'};
+                    --input-bg: ${customization.theme === 'light' ? '#FFFFFF' : '#1F2937'};
+                    --input-text: ${customization.theme === 'light' ? '#2D3748' : '#F9FAFB'};
+                    --input-border: ${customization.theme === 'light' ? '#ced4da' : '#374151'};
+                    --message-bg-user: var(--primary-color);
+                    --message-bg-bot: ${customization.theme === 'light' ? '#f7eeeb' : '#2D3748'};
+                    --message-text-bot: ${customization.theme === 'light' ? '#333' : '#F9FAFB'};
+                    --product-bg: ${customization.theme === 'light' ? '#FFFFFF' : '#1F2937'};
+                    --product-border: ${customization.theme === 'light' ? '#e9ecef' : '#374151'};
+                    --product-text: ${customization.theme === 'light' ? '#333' : '#F9FAFB'};
+                    --scrollbar-bg: ${customization.theme === 'light' ? '#f1f1f1' : '#1F2937'};
+                    --scrollbar-thumb: ${customization.theme === 'light' ? '#c1c1c1' : '#4B5563'};
+                    --scrollbar-hover: ${customization.theme === 'light' ? '#a8a8a8' : '#6B7280'};
+                    --powered-by-bg: ${customization.theme === 'light' ? '#eeeaeb' : '#1F2937'};
+                    --powered-by-text: ${customization.theme === 'light' ? '#666' : 'gray'};
                 }
                 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
 
@@ -85,7 +100,7 @@
 
                 /* Chat Button */
                 #chat-button {
-                    background-color: var(--primary-green);
+                    background-color: var(--primary-color);
                     z-index:10000000;
                     color: white;
                     border: none;
@@ -107,7 +122,7 @@
 
                 /* Hover Effect for Chat Button */
                 #chat-button:hover {
-                    background-color: var(--hover-green);
+                    background-color: var(--hover-color);
                     transform: scale(1.05);
                 }
 
@@ -115,10 +130,12 @@
                 #chat-box {
                     width: 350px;
                     height: 500px;
-                    border: none;
                     border-radius: 16px;
                     background-color: var(--creamy);
-                    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+                    color: var(--text-color);
+                    box-shadow: ${customization.theme === 'light' ? 
+                        '0 6px 20px rgba(0,0,0,0.1)' : 
+                        '0 8px 24px rgba(0,0,0,0.4)'};
                     display: flex;
                     flex-direction: column;
                     overflow: hidden;
@@ -135,13 +152,14 @@
                 }
 
                 #chat-header {
-                    background-color: var(--primary-green); 
+                    background-color: var(--primary-color); 
                     color: white;
                     padding: 15px 20px;
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
                     font-weight: 600;
+                    border-bottom: ${customization.theme === 'light' ? 'none' : '1px solid #374151'};
                 }
 
                 #close-chat {
@@ -183,22 +201,21 @@
                 }
 
                 .user-message {
-                    background-color: var(--primary-green);
+                    background-color: var(--primary-color);
                     color: white;
                     align-self: flex-end;
                     border-bottom-right-radius: 4px;
                 }
 
                 .bot-message {
-                    background-color: #e4e6eb;
-                    color: #333;
+                    background-color: var(--message-bg-bot);
+                    color: var(--message-text-bot);
                     align-self: flex-start;
                     border-top-left-radius: 4px;
                 }
 
                 .system-message {
-                    background-color: #ffeeba;
-                    color: #856404;
+                    color: var(--message-text-bot);
                     align-self: center;
                     border-radius: 12px;
                     font-style: italic;
@@ -207,28 +224,32 @@
 
                 #chat-input-container {
                     display: flex;
-                    padding: 7px 20px;
-                    background-color: var(--creamy);
-                    border-top: 1px solid #e6e6e6;
+                    padding: 15px 20px;
+                    background-color: var(--input-bg);
+                    border-top: 1px solid var(--input-border);
                 }
 
                 #chat-input {
                     flex: 1;
                     padding: 10px 15px;
-                    border: 1px solid #ced4da;
+                    border: 1px solid var(--input-border);
                     border-radius: 25px;
                     font-size: 14px;
+                    background-color: var(--input-bg);
+                    color: var(--input-text);
                     transition: border-color 0.2s, box-shadow 0.2s;
                 }
 
                 #chat-input:focus {
                     outline: none;
-                    border-color: #4a90e2;
-                    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+                    border-color: var(--primary-color);
+                    box-shadow: 0 0 0 3px ${customization.theme === 'light' ? 
+                        `${customization.theme_color}1a` : 
+                        `${customization.theme_color}33`};
                 }
 
                 #send-button {
-                    background-color: var(--primary-green);
+                    background-color: var(--primary-color);
                     color: white;
                     border: none;
                     padding: 10px 20px;
@@ -239,7 +260,7 @@
                 }
 
                 #send-button:hover {
-                    background-color: var(--hover-green);
+                    background-color: var(--hover-color);
                 }
 
                 #send-button:active {
@@ -270,7 +291,7 @@
                     top: 50%;
                     width: 40px;
                     transform: translateY(-50%);
-                    background-color: var(--primary-green);
+                    background-color: var(--primary-color);
                     border: none;
                     color: white;
                     padding: 8px;
@@ -281,7 +302,7 @@
                 }
 
                 .carousel-button:hover {
-                    background-color: var(--hover-green);
+                    background-color: var(--hover-color);
                 }
 
                 .carousel-button.left {
@@ -305,16 +326,18 @@
                 }
 
                 .product-item {
-                    border: 1px solid #e9ecef;
+                    border: 1px solid var(--product-border);
                     border-radius: 12px;
                     padding: 10px;
                     width: calc(50% - 10px);
-                    background-color: var(--creamy);
+                    background-color: var(--product-bg);
                     transition: box-shadow 0.2s, transform 0.2s;
                     display: flex;
                     flex-direction: column;
                     align-items: center;
-                    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+                    box-shadow: ${customization.theme === 'light' ? 
+                        'rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px' : 
+                        'rgba(0, 0, 0, 0.3) 0px 2px 5px -1px, rgba(0, 0, 0, 0.4) 0px 1px 3px -1px'};
                     text-align: center;
                 }
 
@@ -333,19 +356,19 @@
                 .product-name {
                     font-weight: 600;
                     margin: 8px 0;
-                    color: #333;
+                    color: var(--product-text);
                     font-size: 16px;
                 }
 
                 .product-details {
                     font-size: 0.85em;
-                    color: #666;
+                    color: ${customization.theme === 'light' ? '#666' : '#A0AEC0'};
                     margin-bottom: 8px;
                 }
 
                 .product-price {
                     font-weight: 600;
-                    color: var(--primary-green);
+                    color: var(--primary-color);
                     font-size: 14px;
                 }
 
@@ -355,17 +378,17 @@
                 }
 
                 #chat-box-messages::-webkit-scrollbar-track {
-                    background: #f1f1f1;
+                    background: var(--scrollbar-bg);
                     border-radius: 4px;
                 }
 
                 #chat-box-messages::-webkit-scrollbar-thumb {
-                    background: #c1c1c1;
+                    background: var(--scrollbar-thumb);
                     border-radius: 4px;
                 }
 
                 #chat-box-messages::-webkit-scrollbar-thumb:hover {
-                    background: #a8a8a8;
+                    background: var(--scrollbar-hover);
                 }
 
                 /* Markdown Styling */
@@ -413,17 +436,27 @@
                 }
 
                 .message code {
-                    background-color: #f5f5f5;
+                    background-color: ${customization.theme === 'light' ? 
+                        '#f5f5f5' : 
+                        '#2D3748'};
                     padding: 2px 4px;
                     border-radius: 4px;
                     font-family: monospace;
+                    color: ${customization.theme === 'light' ? 
+                        '#333' : 
+                        '#E2E8F0'};
                 }
 
                 .message pre {
-                    background-color: #f5f5f5;
+                    background-color: ${customization.theme === 'light' ? 
+                        '#f5f5f5' : 
+                        '#2D3748'};
                     padding: 10px;
                     border-radius: 4px;
                     overflow-x: auto;
+                    color: ${customization.theme === 'light' ? 
+                        '#333' : 
+                        '#E2E8F0'};
                 }
                     /* Message Wrapper */
                 .message-wrapper {
@@ -492,11 +525,12 @@
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    padding: 2px 20px;
+                    padding: 8px 20px;
                     font-size: 12px;
-                    color: #666;
+                    color: var(--powered-by-text);
                     text-align: center;
-                    background-color: #eeeaeb;
+                    background-color: var(--powered-by-bg);
+                    border-top: ${customization.theme === 'light' ? 'none' : '1px solid #374151'};
                 }
             `;
             document.head.appendChild(style);
@@ -654,7 +688,7 @@
             poweredByLink.style.direction = 'ltr';
             poweredByLink.style.alignItems = 'center';
             poweredByLink.style.justifyContent = 'center';
-            poweredByLink.innerHTML = `<span style="color: #666;">Powered by</span>&nbsp;&nbsp;<img src="https://dori.tech/assets/logo-BPyoLtnV.png" width="36" height="18" alt="Dori Logo">`;
+            poweredByLink.innerHTML = `<span style="color: ${customization.theme === 'light' ? '#666' : '#9CA3AF'}">Powered by</span>&nbsp;&nbsp;<img src="https://dori.tech/assets/logo-BPyoLtnV.png" width="36" height="18" alt="Dori Logo">`;
             chatBox.appendChild(poweredBy);
             poweredBy.appendChild(poweredByLink);
             chatBox.appendChild(chatInputContainer);
