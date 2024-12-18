@@ -50,12 +50,24 @@
         function initChatWidget(botData) {
                 // Inject Styles
             const style = document.createElement('style');
-            // const uiText = botData.texts;
+            const customization = botData.customization || {
+                appearance: 'bubble',
+                theme: 'light',
+                theme_color: '#1b5556',
+                position: {
+                    align: 'right',
+                    side_spacing: 20,
+                    bottom_spacing: 20
+                }
+            };
+
+            console.log(customization);
+            
             style.textContent = `
                 :root {
-                    --primary-green: #1b5556;
-                    --hover-green: rgb(37, 150, 190);
-                    --creamy: #f7eeeb;
+                    --primary-green: ${customization.theme_color};
+                    --hover-green: ${customization.theme_color};
+                    --creamy: ${customization.theme === 'light' ? '#f7eeeb' : '#2D3748'};
                 }
                 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
 
@@ -96,7 +108,7 @@
                 /* Hover Effect for Chat Button */
                 #chat-button:hover {
                     background-color: var(--hover-green);
-                    transform: scale(1.05) rotate(5deg);
+                    transform: scale(1.05);
                 }
 
                 /* Chat Box Styles */
@@ -113,6 +125,8 @@
                     opacity: 0;
                     transform: translateY(20px);
                     transition: opacity 0.3s ease, transform 0.3s ease;
+                    position: fixed;
+                    bottom: ${customization.position.bottom_spacing}px;
                 }
 
                 #chat-box.show {
@@ -509,29 +523,65 @@
             const container = document.createElement('div');
             container.id = 'chat-widget-container';
             container.style.direction = isRTL ? 'rtl' : 'ltr';
+            container.style.position = 'fixed';
+            container.style.bottom = `${customization.position.bottom_spacing}px`;
+            container.style[customization.position.align] = `${customization.position.side_spacing}px`;
+            container.style.zIndex = '1000';
 
             const chatButton = document.createElement('button');
             chatButton.id = 'chat-button';
             chatButton.setAttribute('aria-label', 'Open chat');
-            chatButton.innerHTML = `
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" 
-                    xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                    <path d="M21 11.5C21.0034 12.8199 20.6951 14.1219 20.1 
-                            15.3C19.3944 16.7118 18.3098 17.8992 16.9674 
-                            18.7293C15.6251 19.5594 14.0782 19.9994 
-                            12.5 20C11.1801 20.0035 9.87812 19.6951 
-                            8.7 19.1L3 21L4.9 15.3C4.30493 14.1219 
-                            3.99656 12.8199 4 11.5C4.00061 9.92179 
-                            4.44061 8.37488 5.27072 7.03258C6.10083 
-                            5.69028 7.28825 4.6056 8.7 3.90003C9.87812 
-                            3.30496 11.1801 2.99659 12.5 3.00003H13C15.0843 
-                            3.11502 17.053 3.99479 18.5291 
-                            5.47089C20.0052 6.94699 20.885 
-                            8.91568 21 11V11.5Z" 
-                        stroke="white" stroke-width="2" 
-                        stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            `;
+            chatButton.style[customization.position.align] = `${customization.position.side_spacing}px`;
+            chatButton.style.bottom = `${customization.position.bottom_spacing}px`;
+            
+            if (customization.appearance === 'bar') {
+                chatButton.style.borderRadius = '27px';
+                chatButton.style.width = '150px';
+                chatButton.style.height = '48px';
+                chatButton.innerHTML = `
+                    <span style="margin-right: 8px; font-size:'medium'">${uiText.chatWithUs}</span>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" 
+                        xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path d="M21 11.5C21.0034 12.8199 20.6951 14.1219 20.1 
+                                15.3C19.3944 16.7118 18.3098 17.8992 16.9674 
+                                18.7293C15.6251 19.5594 14.0782 19.9994 
+                                12.5 20C11.1801 20.0035 9.87812 19.6951 
+                                8.7 19.1L3 21L4.9 15.3C4.30493 14.1219 
+                                3.99656 12.8199 4 11.5C4.00061 9.92179 
+                                4.44061 8.37488 5.27072 7.03258C6.10083 
+                                5.69028 7.28825 4.6056 8.7 3.90003C9.87812 
+                                3.30496 11.1801 2.99659 12.5 3.00003H13C15.0843 
+                                3.11502 17.053 3.99479 18.5291 
+                                5.47089C20.0052 6.94699 20.885 
+                                8.91568 21 11V11.5Z" 
+                            stroke="white" stroke-width="2" 
+                            stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                `;
+            } else {
+                chatButton.style.borderRadius = '50%';
+                chatButton.style.width = '60px';
+                chatButton.style.height = '60px';
+                chatButton.innerHTML = `
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" 
+                        xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path d="M21 11.5C21.0034 12.8199 20.6951 14.1219 20.1 
+                                15.3C19.3944 16.7118 18.3098 17.8992 16.9674 
+                                18.7293C15.6251 19.5594 14.0782 19.9994 
+                                12.5 20C11.1801 20.0035 9.87812 19.6951 
+                                8.7 19.1L3 21L4.9 15.3C4.30493 14.1219 
+                                3.99656 12.8199 4 11.5C4.00061 9.92179 
+                                4.44061 8.37488 5.27072 7.03258C6.10083 
+                                5.69028 7.28825 4.6056 8.7 3.90003C9.87812 
+                                3.30496 11.1801 2.99659 12.5 3.00003H13C15.0843 
+                                3.11502 17.053 3.99479 18.5291 
+                                5.47089C20.0052 6.94699 20.885 
+                                8.91568 21 11V11.5Z" 
+                            stroke="white" stroke-width="2" 
+                            stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                `;
+            }
 
             // Handle RTL text direction for messages
             const messageStyles = document.createElement('style');
@@ -551,6 +601,10 @@
             chatBox.id = 'chat-box';
             chatBox.setAttribute('aria-hidden', 'true');
             chatBox.style.display = 'none'; // Initially hidden
+            chatBox.style.backgroundColor = customization.theme === 'light' ? '#FFFFFF' : '#1A202C';
+            chatBox.style.color = customization.theme === 'light' ? '#2D3748' : '#FFFFFF';
+            chatBox.style[customization.position.align] = `${customization.position.side_spacing}px`;
+            chatBox.style.bottom = `${customization.position.bottom_spacing}px`;
 
             const chatHeader = document.createElement('div');
             chatHeader.id = 'chat-header';
@@ -630,10 +684,16 @@
             // Open Chat Function
             function openChat() {
                 chatBox.classList.add('show');
-                chatBox.style.display = 'flex'; // Show the chat box
+                chatBox.style.display = 'flex';
                 chatBox.setAttribute('aria-hidden', 'false');
                 chatButton.style.display = 'none';
                 chatInput.focus();
+                
+                // Ensure chat box appears on the correct side
+                chatBox.style[customization.position.align] = `${customization.position.side_spacing}px`;
+                // Reset the opposite side position
+                chatBox.style[customization.position.align === 'left' ? 'right' : 'left'] = 'auto';
+                
                 if (chatMessages.childElementCount === 0) {
                     appendMessage('bot', botData.wellcomeMessage);
                     displaySuggestedReply();
@@ -998,4 +1058,3 @@
         Sentry.captureException(error);
     }
 })();
-
