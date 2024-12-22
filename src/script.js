@@ -44,11 +44,54 @@
     // Initialize Sentry before other operations
     initSentry();
 
+    // Add Google Analytics initialization function
+    function loadGoogleAnalytics() {
+        const measurementId = 'G-J5P2CETKPP';
+        return new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = `https://www.googletagmanager.com/gtag/js?id=${measurementId}`;
+            script.async = true;
+            script.onload = resolve;
+            script.onerror = reject;
+            document.head.appendChild(script);
 
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            window.gtag = gtag;
+            gtag('js', new Date());
+            gtag('config', measurementId);
+        });
+    }
+
+    // Analytics tracking functions
+    const analytics = {
+        trackEvent: (eventName, params = {}) => {
+            if (window.gtag) {
+                window.gtag('event', eventName, params);
+            }
+        },
+        trackChat: (action, label = '') => {
+            if (window.gtag) {
+                window.gtag('event', 'chat_interaction', {
+                    event_category: 'Chat',
+                    event_action: action,
+                    event_label: label,
+                    sharing_id: botData.sharing_id
+                });
+            }
+        }
+    };
 
     try{    
         function initChatWidget(botData) {
-                // Inject Styles
+            loadGoogleAnalytics().catch(error => {
+                console.error('Failed to load Google Analytics:', error);
+            });
+
+
+            // Inject Styles
             const style = document.createElement('style');
             const customization = botData.customization || {
                 appearance: 'bubble',
@@ -67,15 +110,15 @@
                 :root {
                     --primary-color: ${customization.theme_color};
                     --hover-color: ${customization.theme_color}dd;
-                    --creamy: ${customization.theme === 'light' ? '#FFFFFF' : '#1F2937'};
+                    --creamy: ${customization.theme === 'light' ? '#F6EEEB' : '#1F2937'};
                     --text-color: ${customization.theme === 'light' ? '#2D3748' : '#F9FAFB'};
-                    --input-bg: ${customization.theme === 'light' ? '#FFFFFF' : '#1F2937'};
+                    --input-bg: ${customization.theme === 'light' ? '#F6EEEB' : '#1F2937'};
                     --input-text: ${customization.theme === 'light' ? '#2D3748' : '#F9FAFB'};
                     --input-border: ${customization.theme === 'light' ? '#ced4da' : '#374151'};
                     --message-bg-user: var(--primary-color);
-                    --message-bg-bot: ${customization.theme === 'light' ? '#f7eeeb' : '#2D3748'};
+                    --message-bg-bot: ${customization.theme === 'light' ? '#E4E6EA' : '#2D3748'};
                     --message-text-bot: ${customization.theme === 'light' ? '#333' : '#F9FAFB'};
-                    --product-bg: ${customization.theme === 'light' ? '#FFFFFF' : '#1F2937'};
+                    --product-bg: ${customization.theme === 'light' ? '#F6EEEB' : '#1F2937'};
                     --product-border: ${customization.theme === 'light' ? '#e9ecef' : '#374151'};
                     --product-text: ${customization.theme === 'light' ? '#333' : '#F9FAFB'};
                     --scrollbar-bg: ${customization.theme === 'light' ? '#f1f1f1' : '#1F2937'};
@@ -723,6 +766,9 @@
                 chatButton.style.display = 'none';
                 chatInput.focus();
                 
+                // Track chat open event
+                analytics.trackChat('open');
+                
                 // Ensure chat box appears on the correct side
                 chatBox.style[customization.position.align] = `${customization.position.side_spacing}px`;
                 // Reset the opposite side position
@@ -759,14 +805,14 @@
                 suggestedReplyElement.id = 'suggested-reply';
                 suggestedReplyElement.textContent = replyText;
                 suggestedReplyElement.addEventListener('click', () => {
-                    // Send the suggested reply as user's message
+                    // Track suggested reply click
+                    analytics.trackChat('suggested_reply_click', replyText);
+                    
                     appendMessage('user', replyText);
-                    // Hide all suggested replies
                     const allSuggestions = chatMessages.querySelectorAll('#suggested-reply');
                     allSuggestions.forEach(suggestion => {
                         suggestion.style.display = 'none';
                     });
-                    // Call API with the suggested reply
                     callApi(replyText);
                 });
                 chatMessages.appendChild(suggestedReplyElement);
@@ -776,9 +822,12 @@
             // Close Chat Function
             function closeChat() {
                 chatBox.classList.remove('show');
-                chatBox.style.display = 'none'; // Hide the chat box completely
+                chatBox.style.display = 'none';
                 chatBox.setAttribute('aria-hidden', 'true');
                 chatButton.style.display = 'flex';
+                
+                // Track chat close event
+                analytics.trackChat('close');
             }
 
             // Send Message Function
@@ -787,6 +836,10 @@
                 if (message) {
                     appendMessage('user', message);
                     chatInput.value = '';
+                    
+                    // Track message sent event
+                    analytics.trackChat('message_sent', message.substring(0, 50));
+                    
                     callApi(message);
                 }
             }
@@ -870,7 +923,7 @@
                             <div class="product-carousel">
                                 ${products.map(product => `
                                     <div class="product-item">
-                                        <a href="${product.url}" target="_blank">
+                                        <a href="${product.url}" target="_blank" onclick="window.trackProductClick && window.trackProductClick('${product.name}', ${product.price})">
                                             <img src="${product.image}" alt="${product.name}" class="product-image">
                                             <div class="product-info">
                                                 <div class="product-name">${product.name}</div>
@@ -918,14 +971,26 @@
                 chatMessages.scrollTop = chatMessages.scrollHeight;
             }
 
-            // Expose scrollCarousel globally
+            // Expose scrollCarousel and trackProductClick globally
             window.scrollCarousel = scrollCarousel;
+            window.trackProductClick = function(productName, productPrice) {
+                analytics.trackEvent('product_click', {
+                    event_category: 'Product',
+                    event_action: 'click',
+                    event_label: productName,
+                    price: productPrice,
+                    sharing_id: botData.sharing_id
+                });
+            };
 
             // Call API Function with Streaming
             async function callApi(message) {
                 try {
                     sendButton.disabled = true;
                     appendMessage('system', uiText.typing);
+
+                    // Track API call start
+                    analytics.trackChat('api_call_start');
 
                     const requestBody = {
                         assistant_id: ASSISTANT_ID,
@@ -1037,6 +1102,9 @@
                     removeLastSystemMessage();
                     currentBotMessage = null; // Reset for the next message
 
+                    // Track API call success
+                    analytics.trackChat('api_call_success');
+
                 } catch (error) {
                     console.error('Error:', error);
                     // Capture error in Sentry
@@ -1050,6 +1118,10 @@
                     sessionStorage.removeItem('thread_id');
                     removeLastSystemMessage();
                     appendMessage('system', uiText.error);
+                    
+                    // Track API call error
+                    analytics.trackChat('api_call_error', error.message);
+                    
                 } finally {
                     sendButton.disabled = false;
                 }
@@ -1080,6 +1152,7 @@
 
         }
         botData = await fetchBotDataBySharingID(SHARING_ID);
+        botData.sharing_id = SHARING_ID;
         if (botData.error) {
             errorMessage.innerHTML = botData.error;
         } else if (botData.data) {
