@@ -171,8 +171,10 @@
 
                 /* Chat Box Styles */
                 #chat-box {
-                    width: 350px;
-                    height: 500px;
+                    width: 360px;
+                    height: 65vh;
+                    max-height: 600px;
+                    min-height: 350px;
                     border-radius: 16px;
                     background-color: var(--creamy);
                     color: var(--text-color);
@@ -197,11 +199,12 @@
                 #chat-header {
                     background-color: var(--primary-color); 
                     color: white;
-                    padding: 15px 20px;
+                    padding: 20px 24px;
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
                     font-weight: 600;
+                    font-size: 1.1em;
                     border-bottom: ${customization.theme === 'light' ? 'none' : '1px solid #374151'};
                 }
 
@@ -221,21 +224,22 @@
                 #chat-box-messages {
                     direction: ltr;
                     flex: 1;
-                    padding: 20px;
+                    padding: 24px;
                     background-color: var(--creamy);
                     overflow-y: auto;
                     display: flex;
                     flex-direction: column;
-                    gap: 10px;
+                    gap: 16px;
                 }
 
                 .message {
-                    max-width: 80%;
-                    padding: 12px 16px;
+                    max-width: 85%;
+                    padding: 12px 14px;
                     border-radius: 18px;
                     animation: fadeIn 0.3s ease;
                     line-height: 1.4;
                     word-wrap: break-word;
+                    font-size: 14px;
                 }
 
                 @keyframes fadeIn {
@@ -267,17 +271,17 @@
 
                 #chat-input-container {
                     display: flex;
-                    padding: 15px 20px;
+                    padding: 5px 13px;
                     background-color: var(--input-bg);
                     border-top: 1px solid var(--input-border);
                 }
 
                 #chat-input {
                     flex: 1;
-                    padding: 10px 15px;
+                    padding: 12px 18px;
                     border: 1px solid var(--input-border);
                     border-radius: 25px;
-                    font-size: 14px;
+                    font-size: 15px;
                     background-color: var(--input-bg);
                     color: var(--input-text);
                     transition: border-color 0.2s, box-shadow 0.2s;
@@ -295,11 +299,12 @@
                     background-color: var(--primary-color);
                     color: white;
                     border: none;
-                    padding: 10px 20px;
+                    padding: 12px 24px;
                     border-radius: 25px;
                     cursor: pointer;
                     transition: background-color 0.2s, transform 0.2s;
                     font-weight: 500;
+                    font-size: 15px;
                 }
 
                 #send-button:hover {
@@ -310,109 +315,105 @@
                     transform: translateY(0);
                 }
 
-                /* Carousel Container */
+                /* Product Carousel Improvements */
                 .product-carousel {
                     display: flex;
                     overflow-x: auto;
                     scroll-behavior: smooth;
-                    gap: 10px;
-                    padding: 10px 0;
-                }
-
-                /* Hide scrollbar */
-                .product-carousel::-webkit-scrollbar {
-                    display: none;
-                }
-                .product-carousel {
-                    -ms-overflow-style: none; /* IE and Edge */
-                    scrollbar-width: none; /* Firefox */
-                }
-
-                /* Carousel Navigation Buttons */
-                .carousel-button {
-                    position: absolute;
-                    top: 50%;
-                    width: 40px;
-                    transform: translateY(-50%);
-                    background-color: var(--primary-color);
-                    border: none;
-                    color: white;
-                    padding: 8px;
-                    border-radius: 50%;
-                    cursor: pointer;
-                    z-index: 10;
-                    transition: background-color 0.3s;
-                }
-
-                .carousel-button:hover {
-                    background-color: var(--hover-color);
-                }
-
-                .carousel-button.left {
-                    left: 0;
-                }
-
-                .carousel-button.right {
-                    right: 0;
-                }
-
-                /* Adjust Product Item for Carousel */
-                .product-item {
-                    min-width: 200px; /* Adjust based on desired item width */
-                    flex-shrink: 0;
-                }
-
-                .product-container {
-                    display: flex;
-                    flex-wrap: wrap;
-                    gap: 10px;
+                    gap: 12px;
+                    padding: 12px 4px;
+                    scrollbar-width: none;
+                    -ms-overflow-style: none;
+                    position: relative;
                 }
 
                 .product-item {
+                    min-width: 200px;
+                    max-width: 200px;
                     border: 1px solid var(--product-border);
                     border-radius: 12px;
-                    padding: 10px;
-                    width: calc(50% - 10px);
+                    padding: 12px;
                     background-color: var(--product-bg);
-                    transition: box-shadow 0.2s, transform 0.2s;
+                    transition: transform 0.2s, box-shadow 0.2s;
                     display: flex;
                     flex-direction: column;
                     align-items: center;
                     box-shadow: ${customization.theme === 'light' ? 
-                        'rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px' : 
-                        'rgba(0, 0, 0, 0.3) 0px 2px 5px -1px, rgba(0, 0, 0, 0.4) 0px 1px 3px -1px'};
-                    text-align: center;
+                        'rgba(0, 0, 0, 0.05) 0px 2px 4px' : 
+                        'rgba(0, 0, 0, 0.2) 0px 2px 4px'};
+                }
+
+                .product-item:hover {
+                    transform: translateY(-2px);
+                    box-shadow: ${customization.theme === 'light' ? 
+                        'rgba(0, 0, 0, 0.1) 0px 4px 8px' : 
+                        'rgba(0, 0, 0, 0.3) 0px 4px 8px'};
                 }
 
                 .product-image {
                     width: 100%;
-                    height: 150px;
+                    height: 140px;
                     border-radius: 8px;
                     object-fit: cover;
-                    margin-bottom: 10px;
+                    margin-bottom: 8px;
                 }
 
                 .product-info {
                     width: 100%;
+                    padding: 8px 0;
                 }
 
                 .product-name {
                     font-weight: 600;
-                    margin: 8px 0;
+                    margin: 4px 0;
                     color: var(--product-text);
-                    font-size: 16px;
-                }
-
-                .product-details {
-                    font-size: 0.85em;
-                    color: ${customization.theme === 'light' ? '#666' : '#A0AEC0'};
-                    margin-bottom: 8px;
+                    font-size: 14px;
+                    line-height: 1.4;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 2;
+                    -webkit-box-orient: vertical;
                 }
 
                 .product-price {
                     font-weight: 600;
                     color: var(--primary-color);
+                    font-size: 15px;
+                    margin-top: 4px;
+                }
+
+                .carousel-button {
+                    position: absolute;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    width: 32px;
+                    height: 32px;
+                    background-color: var(--primary-color);
+                    border: none;
+                    color: white;
+                    border-radius: 50%;
+                    cursor: pointer;
+                    z-index: 10;
+                    transition: background-color 0.3s, opacity 0.3s;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    opacity: 0.8;
                     font-size: 14px;
+                }
+
+                .carousel-button:hover {
+                    background-color: var(--hover-color);
+                    opacity: 1;
+                }
+
+                .carousel-button.left {
+                    left: 4px;
+                }
+
+                .carousel-button.right {
+                    right: 4px;
                 }
 
                 /* Scrollbar Styling */
@@ -441,21 +442,28 @@
                 .message h4,
                 .message h5,
                 .message h6 {
-                    margin: 0.5em 0;
+                    margin: 0.3em 0;
+                    line-height: 1.3;
                 }
 
                 .message p {
-                    margin: 0.5em 0;
+                    margin: 0.3em 0;
+                    line-height: 1.4;
                 }
 
                 .message ul,
                 .message ol {
-                    padding-left: 1.5em;
-                    margin: 0.5em 0;
+                    padding-left: 1.2em;
+                    margin: 0.3em 0;
+                }
+
+                .message li {
+                    margin: 0.2em 0;
+                    line-height: 1.4;
                 }
 
                 .message strong {
-                    font-weight: bold;
+                    font-weight: 600;
                 }
 
                 .message em {
@@ -472,19 +480,20 @@
                 }
 
                 .message blockquote {
-                    border-left: 4px solid #ccc;
-                    padding-left: 1em;
+                    border-left: 3px solid #ccc;
+                    padding-left: 0.8em;
+                    margin: 0.4em 0;
                     color: #666;
-                    margin: 0.5em 0;
                 }
 
                 .message code {
                     background-color: ${customization.theme === 'light' ? 
                         '#f5f5f5' : 
                         '#2D3748'};
-                    padding: 2px 4px;
+                    padding: 1px 4px;
                     border-radius: 4px;
                     font-family: monospace;
+                    font-size: 13px;
                     color: ${customization.theme === 'light' ? 
                         '#333' : 
                         '#E2E8F0'};
@@ -494,14 +503,23 @@
                     background-color: ${customization.theme === 'light' ? 
                         '#f5f5f5' : 
                         '#2D3748'};
-                    padding: 10px;
+                    padding: 8px;
                     border-radius: 4px;
                     overflow-x: auto;
+                    margin: 0.4em 0;
                     color: ${customization.theme === 'light' ? 
                         '#333' : 
                         '#E2E8F0'};
                 }
-                    /* Message Wrapper */
+
+                .message pre code {
+                    padding: 0;
+                    background: none;
+                    font-size: 13px;
+                    line-height: 1.4;
+                }
+
+                /* Message Wrapper */
                 .message-wrapper {
                     display: flex;
                     align-items: flex-start;
@@ -574,6 +592,19 @@
                     text-align: center;
                     background-color: var(--powered-by-bg);
                     border-top: ${customization.theme === 'light' ? 'none' : '1px solid #374151'};
+                }
+
+                /* Responsive Design */
+                @media screen and (max-width: 480px) {
+                    #chat-box {
+                        width: 100%;
+                        height: 100vh;
+                        max-height: none;
+                        border-radius: 0;
+                        bottom: 0 !important;
+                        right: 0 !important;
+                        left: 0 !important;
+                    }
                 }
             `;
             document.head.appendChild(style);
