@@ -104,7 +104,6 @@
                 }
             };
 
-            console.log(customization);
             
             style.textContent = `
                 :root {
@@ -135,7 +134,7 @@
                     bottom: 20px;
                     right: 20px;
                     font-family: 'Poppins', sans-serif;
-                    z-index: 1000;
+                    z-index: 2147483647;
                     display: flex;
                     flex-direction: column;
                     align-items: flex-end;
@@ -144,7 +143,7 @@
                 /* Chat Button */
                 #dori-chat-button {
                     background-color: var(--dori-primary-color);
-                    z-index:10000000;
+                    z-index: 2147483647;
                     color: white;
                     border: none;
                     border-radius: 50%;
@@ -213,6 +212,7 @@
                     color: white;
                     font-size: 24px;
                     cursor: pointer;
+                    padding: 1px;
                     transition: transform 0.2s ease;
                 }
 
@@ -228,7 +228,6 @@
                     overflow-y: auto;
                     display: flex;
                     flex-direction: column;
-                    gap: 16px;
                 }
 
                 .dori-message {
@@ -566,6 +565,7 @@
                     background-color: #f0f0f0;
                     color: #555;
                     padding: 10px 15px;
+                    margin-top: 6px;
                     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
                     border-radius: 25px;
                     display: inline-block;
@@ -597,13 +597,19 @@
                 /* Responsive Design */
                 @media screen and (max-width: 480px) {
                     #dori-chat-box {
-                        width: 100%;
-                        height: 100vh;
-                        max-height: none;
-                        border-radius: 0;
-                        bottom: 0 !important;
-                        right: 0 !important;
-                        left: 0 !important;
+                        width: 90%;
+                        height: 65vh;
+                        max-height: 600px;
+                        min-height: 350px;
+                        border-radius: 16px;
+                        margin: 0 auto;
+                        left: 0;
+                        right: 0;
+                    }
+
+                    #dori-chat-button {
+                        width: 50px;
+                        height: 50px;
                     }
                 }
             `;
