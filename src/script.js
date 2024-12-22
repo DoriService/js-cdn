@@ -640,7 +640,6 @@
             container.style.position = 'fixed';
             container.style.bottom = `${customization.position.bottom_spacing}px`;
             container.style[customization.position.align] = `${customization.position.side_spacing}px`;
-            container.style.zIndex = '1000';
 
             const chatButton = document.createElement('button');
             chatButton.id = 'dori-chat-button';
