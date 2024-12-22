@@ -1,6 +1,6 @@
 {
   "name": "dori-chat-widget",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "description": "Dori Chat Widget",
   "main": "dist/script.js",
   "scripts": {
