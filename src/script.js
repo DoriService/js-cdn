@@ -108,29 +108,29 @@
             
             style.textContent = `
                 :root {
-                    --primary-color: ${customization.theme_color};
-                    --hover-color: ${customization.theme_color}dd;
-                    --creamy: ${customization.theme === 'light' ? '#F6EEEB' : '#1F2937'};
-                    --text-color: ${customization.theme === 'light' ? '#2D3748' : '#F9FAFB'};
-                    --input-bg: ${customization.theme === 'light' ? '#F6EEEB' : '#1F2937'};
-                    --input-text: ${customization.theme === 'light' ? '#2D3748' : '#F9FAFB'};
-                    --input-border: ${customization.theme === 'light' ? '#ced4da' : '#374151'};
-                    --message-bg-user: var(--primary-color);
-                    --message-bg-bot: ${customization.theme === 'light' ? '#E4E6EA' : '#2D3748'};
-                    --message-text-bot: ${customization.theme === 'light' ? '#333' : '#F9FAFB'};
-                    --product-bg: ${customization.theme === 'light' ? '#F6EEEB' : '#1F2937'};
-                    --product-border: ${customization.theme === 'light' ? '#e9ecef' : '#374151'};
-                    --product-text: ${customization.theme === 'light' ? '#333' : '#F9FAFB'};
-                    --scrollbar-bg: ${customization.theme === 'light' ? '#f1f1f1' : '#1F2937'};
-                    --scrollbar-thumb: ${customization.theme === 'light' ? '#c1c1c1' : '#4B5563'};
-                    --scrollbar-hover: ${customization.theme === 'light' ? '#a8a8a8' : '#6B7280'};
-                    --powered-by-bg: ${customization.theme === 'light' ? '#eeeaeb' : '#1F2937'};
-                    --powered-by-text: ${customization.theme === 'light' ? '#666' : 'gray'};
+                    --dori-primary-color: ${customization.theme_color};
+                    --dori-hover-color: ${customization.theme_color}dd;
+                    --dori-creamy: ${customization.theme === 'light' ? '#F6EEEB' : '#1F2937'};
+                    --dori-text-color: ${customization.theme === 'light' ? '#2D3748' : '#F9FAFB'};
+                    --dori-input-bg: ${customization.theme === 'light' ? '#F6EEEB' : '#1F2937'};
+                    --dori-input-text: ${customization.theme === 'light' ? '#2D3748' : '#F9FAFB'};
+                    --dori-input-border: ${customization.theme === 'light' ? '#ced4da' : '#374151'};
+                    --dori-message-bg-user: var(--dori-primary-color);
+                    --dori-message-bg-bot: ${customization.theme === 'light' ? '#E4E6EA' : '#2D3748'};
+                    --dori-message-text-bot: ${customization.theme === 'light' ? '#333' : '#F9FAFB'};
+                    --dori-product-bg: ${customization.theme === 'light' ? '#F6EEEB' : '#1F2937'};
+                    --dori-product-border: ${customization.theme === 'light' ? '#e9ecef' : '#374151'};
+                    --dori-product-text: ${customization.theme === 'light' ? '#333' : '#F9FAFB'};
+                    --dori-scrollbar-bg: ${customization.theme === 'light' ? '#f1f1f1' : '#1F2937'};
+                    --dori-scrollbar-thumb: ${customization.theme === 'light' ? '#c1c1c1' : '#4B5563'};
+                    --dori-scrollbar-hover: ${customization.theme === 'light' ? '#a8a8a8' : '#6B7280'};
+                    --dori-powered-by-bg: ${customization.theme === 'light' ? '#eeeaeb' : '#1F2937'};
+                    --dori-powered-by-text: ${customization.theme === 'light' ? '#666' : 'gray'};
                 }
                 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
 
                 /* Chat Widget Container */
-                #chat-widget-container {
+                #dori-chat-widget-container {
                     position: fixed;
                     bottom: 20px;
                     right: 20px;
@@ -142,8 +142,8 @@
                 }
 
                 /* Chat Button */
-                #chat-button {
-                    background-color: var(--primary-color);
+                #dori-chat-button {
+                    background-color: var(--dori-primary-color);
                     z-index:10000000;
                     color: white;
                     border: none;
@@ -160,24 +160,23 @@
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    margin-top: auto; /* Push button to bottom */
+                    margin-top: auto;
                 }
 
-                /* Hover Effect for Chat Button */
-                #chat-button:hover {
-                    background-color: var(--hover-color);
+                #dori-chat-button:hover {
+                    background-color: var(--dori-hover-color);
                     transform: scale(1.05);
                 }
 
                 /* Chat Box Styles */
-                #chat-box {
+                #dori-chat-box {
                     width: 360px;
                     height: 65vh;
                     max-height: 600px;
                     min-height: 350px;
                     border-radius: 16px;
-                    background-color: var(--creamy);
-                    color: var(--text-color);
+                    background-color: var(--dori-creamy);
+                    color: var(--dori-text-color);
                     box-shadow: ${customization.theme === 'light' ? 
                         '0 6px 20px rgba(0,0,0,0.1)' : 
                         '0 8px 24px rgba(0,0,0,0.4)'};
@@ -191,13 +190,13 @@
                     bottom: ${customization.position.bottom_spacing}px;
                 }
 
-                #chat-box.show {
+                #dori-chat-box.show {
                     opacity: 1;
                     transform: translateY(0);
                 }
 
-                #chat-header {
-                    background-color: var(--primary-color); 
+                #dori-chat-header {
+                    background-color: var(--dori-primary-color); 
                     color: white;
                     padding: 20px 24px;
                     display: flex;
@@ -208,7 +207,7 @@
                     border-bottom: ${customization.theme === 'light' ? 'none' : '1px solid #374151'};
                 }
 
-                #close-chat {
+                #dori-close-chat {
                     background: none;
                     border: none;
                     color: white;
@@ -217,86 +216,86 @@
                     transition: transform 0.2s ease;
                 }
 
-                #close-chat:hover {
+                #dori-close-chat:hover {
                     transform: scale(1.2);
                 }
 
-                #chat-box-messages {
+                #dori-chat-box-messages {
                     direction: ltr;
                     flex: 1;
                     padding: 24px;
-                    background-color: var(--creamy);
+                    background-color: var(--dori-creamy);
                     overflow-y: auto;
                     display: flex;
                     flex-direction: column;
                     gap: 16px;
                 }
 
-                .message {
+                .dori-message {
                     max-width: 85%;
                     padding: 12px 14px;
                     border-radius: 18px;
-                    animation: fadeIn 0.3s ease;
+                    animation: doriMessageFadeIn 0.3s ease;
                     line-height: 1.4;
                     word-wrap: break-word;
                     font-size: 14px;
                 }
 
-                @keyframes fadeIn {
+                @keyframes doriMessageFadeIn {
                     from { opacity: 0; transform: translateY(10px); }
                     to { opacity: 1; transform: translateY(0); }
                 }
 
-                .user-message {
-                    background-color: var(--primary-color);
+                .dori-user-message {
+                    background-color: var(--dori-primary-color);
                     color: white;
                     align-self: flex-end;
                     border-bottom-right-radius: 4px;
                 }
 
-                .bot-message {
-                    background-color: var(--message-bg-bot);
-                    color: var(--message-text-bot);
+                .dori-bot-message {
+                    background-color: var(--dori-message-bg-bot);
+                    color: var(--dori-message-text-bot);
                     align-self: flex-start;
                     border-top-left-radius: 4px;
                 }
 
-                .system-message {
-                    color: var(--message-text-bot);
+                .dori-system-message {
+                    color: var(--dori-message-text-bot);
                     align-self: center;
                     border-radius: 12px;
                     font-style: italic;
                     padding: 8px 12px;
                 }
 
-                #chat-input-container {
+                #dori-chat-input-container {
                     display: flex;
                     padding: 5px 13px;
-                    background-color: var(--input-bg);
-                    border-top: 1px solid var(--input-border);
+                    background-color: var(--dori-input-bg);
+                    border-top: 1px solid var(--dori-input-border);
                 }
 
-                #chat-input {
+                #dori-chat-input {
                     flex: 1;
                     padding: 12px 18px;
-                    border: 1px solid var(--input-border);
+                    border: 1px solid var(--dori-input-border);
                     border-radius: 25px;
                     font-size: 15px;
-                    background-color: var(--input-bg);
-                    color: var(--input-text);
+                    background-color: var(--dori-input-bg);
+                    color: var(--dori-input-text);
                     transition: border-color 0.2s, box-shadow 0.2s;
                 }
 
-                #chat-input:focus {
+                #dori-chat-input:focus {
                     outline: none;
-                    border-color: var(--primary-color);
+                    border-color: var(--dori-primary-color);
                     box-shadow: 0 0 0 3px ${customization.theme === 'light' ? 
                         `${customization.theme_color}1a` : 
                         `${customization.theme_color}33`};
                 }
 
-                #send-button {
-                    background-color: var(--primary-color);
+                #dori-send-button {
+                    background-color: var(--dori-primary-color);
                     color: white;
                     border: none;
                     padding: 12px 24px;
@@ -307,16 +306,16 @@
                     font-size: 15px;
                 }
 
-                #send-button:hover {
-                    background-color: var(--hover-color);
+                #dori-send-button:hover {
+                    background-color: var(--dori-hover-color);
                 }
 
-                #send-button:active {
+                #dori-send-button:active {
                     transform: translateY(0);
                 }
 
                 /* Product Carousel Improvements */
-                .product-carousel {
+                .dori-product-carousel {
                     display: flex;
                     overflow-x: auto;
                     scroll-behavior: smooth;
@@ -327,13 +326,13 @@
                     position: relative;
                 }
 
-                .product-item {
+                .dori-product-item {
                     min-width: 200px;
                     max-width: 200px;
-                    border: 1px solid var(--product-border);
+                    border: 1px solid var(--dori-product-border);
                     border-radius: 12px;
                     padding: 12px;
-                    background-color: var(--product-bg);
+                    background-color: var(--dori-product-bg);
                     transition: transform 0.2s, box-shadow 0.2s;
                     display: flex;
                     flex-direction: column;
@@ -343,14 +342,14 @@
                         'rgba(0, 0, 0, 0.2) 0px 2px 4px'};
                 }
 
-                .product-item:hover {
+                .dori-product-item:hover {
                     transform: translateY(-2px);
                     box-shadow: ${customization.theme === 'light' ? 
                         'rgba(0, 0, 0, 0.1) 0px 4px 8px' : 
                         'rgba(0, 0, 0, 0.3) 0px 4px 8px'};
                 }
 
-                .product-image {
+                .dori-product-image {
                     width: 100%;
                     height: 140px;
                     border-radius: 8px;
@@ -358,15 +357,15 @@
                     margin-bottom: 8px;
                 }
 
-                .product-info {
+                .dori-product-info {
                     width: 100%;
                     padding: 8px 0;
                 }
 
-                .product-name {
+                .dori-product-name {
                     font-weight: 600;
                     margin: 4px 0;
-                    color: var(--product-text);
+                    color: var(--dori-product-text);
                     font-size: 14px;
                     line-height: 1.4;
                     overflow: hidden;
@@ -376,20 +375,20 @@
                     -webkit-box-orient: vertical;
                 }
 
-                .product-price {
+                .dori-product-price {
                     font-weight: 600;
-                    color: var(--primary-color);
+                    color: var(--dori-primary-color);
                     font-size: 15px;
                     margin-top: 4px;
                 }
 
-                .carousel-button {
+                .dori-carousel-button {
                     position: absolute;
                     top: 50%;
                     transform: translateY(-50%);
                     width: 32px;
                     height: 32px;
-                    background-color: var(--primary-color);
+                    background-color: var(--dori-primary-color);
                     border: none;
                     color: white;
                     border-radius: 50%;
@@ -403,90 +402,90 @@
                     font-size: 14px;
                 }
 
-                .carousel-button:hover {
-                    background-color: var(--hover-color);
+                .dori-carousel-button:hover {
+                    background-color: var(--dori-hover-color);
                     opacity: 1;
                 }
 
-                .carousel-button.left {
+                .dori-carousel-button.left {
                     left: 4px;
                 }
 
-                .carousel-button.right {
+                .dori-carousel-button.right {
                     right: 4px;
                 }
 
                 /* Scrollbar Styling */
-                #chat-box-messages::-webkit-scrollbar {
+                #dori-chat-box-messages::-webkit-scrollbar {
                     width: 8px;
                 }
 
-                #chat-box-messages::-webkit-scrollbar-track {
-                    background: var(--scrollbar-bg);
+                #dori-chat-box-messages::-webkit-scrollbar-track {
+                    background: var(--dori-scrollbar-bg);
                     border-radius: 4px;
                 }
 
-                #chat-box-messages::-webkit-scrollbar-thumb {
-                    background: var(--scrollbar-thumb);
+                #dori-chat-box-messages::-webkit-scrollbar-thumb {
+                    background: var(--dori-scrollbar-thumb);
                     border-radius: 4px;
                 }
 
-                #chat-box-messages::-webkit-scrollbar-thumb:hover {
-                    background: var(--scrollbar-hover);
+                #dori-chat-box-messages::-webkit-scrollbar-thumb:hover {
+                    background: var(--dori-scrollbar-hover);
                 }
 
                 /* Markdown Styling */
-                .message h1,
-                .message h2,
-                .message h3,
-                .message h4,
-                .message h5,
-                .message h6 {
+                .dori-message h1,
+                .dori-message h2,
+                .dori-message h3,
+                .dori-message h4,
+                .dori-message h5,
+                .dori-message h6 {
                     margin: 0.3em 0;
                     line-height: 1.3;
                 }
 
-                .message p {
+                .dori-message p {
                     margin: 0.3em 0;
                     line-height: 1.4;
                 }
 
-                .message ul,
-                .message ol {
+                .dori-message ul,
+                .dori-message ol {
                     padding-left: 1.2em;
                     margin: 0.3em 0;
                 }
 
-                .message li {
+                .dori-message li {
                     margin: 0.2em 0;
                     line-height: 1.4;
                 }
 
-                .message strong {
+                .dori-message strong {
                     font-weight: 600;
                 }
 
-                .message em {
+                .dori-message em {
                     font-style: italic;
                 }
 
-                .message a {
+                .dori-message a {
                     color: #4a90e2;
                     text-decoration: none;
                 }
 
-                .message a:hover {
+                .dori-message a:hover {
                     text-decoration: underline;
                 }
 
-                .message blockquote {
+                .dori-message blockquote {
                     border-left: 3px solid #ccc;
                     padding-left: 0.8em;
                     margin: 0.4em 0;
                     color: #666;
                 }
 
-                .message code {
+                .dori-message code {
                     background-color: ${customization.theme === 'light' ? 
                         '#f5f5f5' : 
                         '#2D3748'};
@@ -499,7 +498,7 @@
                         '#E2E8F0'};
                 }
 
-                .message pre {
+                .dori-message pre {
                     background-color: ${customization.theme === 'light' ? 
                         '#f5f5f5' : 
                         '#2D3748'};
@@ -512,7 +511,7 @@
                         '#E2E8F0'};
                 }
 
-                .message pre code {
+                .dori-message pre code {
                     padding: 0;
                     background: none;
                     font-size: 13px;
@@ -520,49 +519,50 @@
                 }
 
                 /* Message Wrapper */
-                .message-wrapper {
+                .dori-message-wrapper {
                     display: flex;
                     align-items: flex-start;
                     margin-bottom: 10px;
                 }
 
                 /* User Message Wrapper */
-                .user-message-wrapper {
+                .dori-user-message-wrapper {
                     flex-direction: row-reverse;
                 }
 
-                .user-message-wrapper .message {
+                .dori-user-message-wrapper .dori-message {
                     border-bottom-right-radius: 4px;
                     border-bottom-left-radius: 18px;
                 }
 
-                .user-message-wrapper .avatar {
+                .dori-user-message-wrapper .dori-avatar {
                     margin-left: 8px;
                 }
 
                 /* Bot Message Wrapper */
-                .bot-message-wrapper {
+                .dori-bot-message-wrapper {
                     flex-direction: row;
                 }
 
-                .bot-message-wrapper .message {
+                .dori-bot-message-wrapper .dori-message {
                     border-radius: 18px;
                     border-top-left-radius: 4px;
                 }
 
-                .bot-message-wrapper .avatar {
+                .dori-bot-message-wrapper .dori-avatar {
                     margin-right: 8px;
                 }
 
                 /* Avatar */
-                .avatar {
+                .dori-avatar {
                     width: 40px;
                     height: 40px;
                     border-radius: 50%;
                     object-fit: cover;
                 }
+
                 /* Suggested Reply */
-                #suggested-reply {
+                #dori-suggested-reply {
                     background-color: #f0f0f0;
                     color: #555;
                     padding: 10px 15px;
@@ -576,27 +576,27 @@
                     text-align: center;
                 }
 
-                #suggested-reply:hover {
+                #dori-suggested-reply:hover {
                     background-color: #e0e0e0;
                     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
                 }
 
                 /* "Powered by Dori" Styles */
-                #powered-by-dori {
+                #dori-powered-by {
                     display: flex;
                     align-items: center;
                     justify-content: center;
                     padding: 8px 20px;
                     font-size: 12px;
-                    color: var(--powered-by-text);
+                    color: var(--dori-powered-by-text);
                     text-align: center;
-                    background-color: var(--powered-by-bg);
+                    background-color: var(--dori-powered-by-bg);
                     border-top: ${customization.theme === 'light' ? 'none' : '1px solid #374151'};
                 }
 
                 /* Responsive Design */
                 @media screen and (max-width: 480px) {
-                    #chat-box {
+                    #dori-chat-box {
                         width: 100%;
                         height: 100vh;
                         max-height: none;
@@ -629,7 +629,7 @@
 
             // Create Chat Widget Elements
             const container = document.createElement('div');
-            container.id = 'chat-widget-container';
+            container.id = 'dori-chat-widget-container';
             container.style.direction = isRTL ? 'rtl' : 'ltr';
             container.style.position = 'fixed';
             container.style.bottom = `${customization.position.bottom_spacing}px`;
@@ -637,7 +637,7 @@
             container.style.zIndex = '1000';
 
             const chatButton = document.createElement('button');
-            chatButton.id = 'chat-button';
+            chatButton.id = 'dori-chat-button';
             chatButton.setAttribute('aria-label', 'Open chat');
             chatButton.style[customization.position.align] = `${customization.position.side_spacing}px`;
             chatButton.style.bottom = `${customization.position.bottom_spacing}px`;
@@ -695,9 +695,9 @@
             const messageStyles = document.createElement('style');
             messageStyles.textContent = `
                 ${isRTL ? `
-                    .user-message,
-                    .bot-message,
-                    .system-message {
+                    .dori-user-message,
+                    .dori-bot-message,
+                    .dori-system-message {
                         text-align: right;
                         direction: rtl;
                     }
@@ -706,7 +706,7 @@
             document.head.appendChild(messageStyles);
 
             const chatBox = document.createElement('div');
-            chatBox.id = 'chat-box';
+            chatBox.id = 'dori-chat-box';
             chatBox.setAttribute('aria-hidden', 'true');
             chatBox.style.display = 'none'; // Initially hidden
             chatBox.style.backgroundColor = customization.theme === 'light' ? '#FFFFFF' : '#1A202C';
@@ -715,30 +715,30 @@
             chatBox.style.bottom = `${customization.position.bottom_spacing}px`;
 
             const chatHeader = document.createElement('div');
-            chatHeader.id = 'chat-header';
+            chatHeader.id = 'dori-chat-header';
             
             chatHeader.innerHTML = `<span>${uiText.chatWithUs}</span>`;
 
             const closeButton = document.createElement('button');
-            closeButton.id = 'close-chat';
+            closeButton.id = 'dori-close-chat';
             closeButton.setAttribute('aria-label', 'Close chat');
             closeButton.innerHTML = '&times;';
             chatHeader.appendChild(closeButton);
 
             const chatMessages = document.createElement('div');
-            chatMessages.id = 'chat-box-messages';
+            chatMessages.id = 'dori-chat-box-messages';
 
             const chatInputContainer = document.createElement('div');
-            chatInputContainer.id = 'chat-input-container';
+            chatInputContainer.id = 'dori-chat-input-container';
 
             const chatInput = document.createElement('input');
-            chatInput.id = 'chat-input';
+            chatInput.id = 'dori-chat-input';
             chatInput.type = 'text';
             chatInput.placeholder = uiText.inputPlaceholder;
             chatInput.setAttribute('aria-label', 'Type your message');
 
             const sendButton = document.createElement('button');
-            sendButton.id = 'send-button';
+            sendButton.id = 'dori-send-button';
             sendButton.textContent = uiText.buttonText;
             sendButton.setAttribute('aria-label', 'Send message');
             sendButton.style.margin = isRTL ? '0 10px 0 0' : '0 0 0 10px';
@@ -750,7 +750,7 @@
             chatBox.appendChild(chatMessages);
             // Add "Powered by Dori" footer
             const poweredBy = document.createElement('div');
-            poweredBy.id = 'powered-by-dori';
+            poweredBy.id = 'dori-powered-by';
             poweredBy.style.display = 'flex';
             poweredBy.style.justifyContent = 'center'; // Center horizontally
             poweredBy.style.alignItems = 'center'; // Center vertically
@@ -833,14 +833,14 @@
 
             function createSuggestedReplyElement(replyText) {
                 const suggestedReplyElement = document.createElement('div');
-                suggestedReplyElement.id = 'suggested-reply';
+                suggestedReplyElement.id = 'dori-suggested-reply';
                 suggestedReplyElement.textContent = replyText;
                 suggestedReplyElement.addEventListener('click', () => {
                     // Track suggested reply click
                     analytics.trackChat('suggested_reply_click', replyText);
                     
                     appendMessage('user', replyText);
-                    const allSuggestions = chatMessages.querySelectorAll('#suggested-reply');
+                    const allSuggestions = chatMessages.querySelectorAll('#dori-suggested-reply');
                     allSuggestions.forEach(suggestion => {
                         suggestion.style.display = 'none';
                     });
@@ -879,50 +879,49 @@
             function appendMessage(sender, content) {
                 try {
                     const messageWrapper = document.createElement('div');
-                    messageWrapper.classList.add('message-wrapper');
+                    messageWrapper.classList.add('dori-message-wrapper');
 
                     const messageElement = document.createElement('div');
-                    messageElement.classList.add('message');
+                    messageElement.classList.add('dori-message');
                     
                     if (sender === 'user') {
-                messageWrapper.classList.add('user-message-wrapper');
-                messageElement.classList.add('user-message');
-            } else if (sender === 'bot') {
-                messageWrapper.classList.add('bot-message-wrapper');
-                messageElement.classList.add('bot-message');
+                        messageWrapper.classList.add('dori-user-message-wrapper');
+                        messageElement.classList.add('dori-user-message');
+                    } else if (sender === 'bot') {
+                        messageWrapper.classList.add('dori-bot-message-wrapper');
+                        messageElement.classList.add('dori-bot-message');
 
-                // Create avatar image
-                const avatar = document.createElement('img');
-                avatar.classList.add('avatar');
-                avatar.src = botData.bot_image || 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541';
-                avatar.alt = 'Bot Avatar';
+                        // Create avatar image
+                        const avatar = document.createElement('img');
+                        avatar.classList.add('dori-avatar');
+                        avatar.src = botData.bot_image || 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541';
+                        avatar.alt = 'Bot Avatar';
 
-                messageWrapper.appendChild(avatar);
-            } else if (sender === 'system') {
-                messageElement.classList.add('system-message');
-            }
+                        messageWrapper.appendChild(avatar);
+                    } else if (sender === 'system') {
+                        messageElement.classList.add('dori-system-message');
+                    }
 
-            // Check if marked.js is loaded
-            if (typeof marked !== 'undefined') {
-                try {
-                    const htmlContent = marked.parse(content);
-                    messageElement.innerHTML = htmlContent;
-                } catch (error) {
-                    Sentry.captureException(error, {
-                        extra: {
-                            context: 'Markdown parsing',
-                            content
+                    // Check if marked.js is loaded
+                    if (typeof marked !== 'undefined') {
+                        try {
+                            const htmlContent = marked.parse(content);
+                            messageElement.innerHTML = htmlContent;
+                        } catch (error) {
+                            Sentry.captureException(error, {
+                                extra: {
+                                    context: 'Markdown parsing',
+                                    content
+                                }
+                            });
+                            messageElement.textContent = content; // Fallback to plain text
                         }
-                    });
-                    messageElement.textContent = content; // Fallback to plain text
-                }
-            }
+                    }
 
-            messageWrapper.appendChild(messageElement);
-            chatMessages.appendChild(messageWrapper);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+                    messageWrapper.appendChild(messageElement);
+                    chatMessages.appendChild(messageWrapper);
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
 
-            // Return the message element for future updates
                     return messageElement;
                 } catch (error) {
                     Sentry.captureException(error, {
@@ -939,7 +938,7 @@
             function appendProducts(products) {
                 const productHTML = createProductHTML(products);
                 const messageElement = document.createElement('div');
-                messageElement.classList.add('message', 'bot-message');
+                messageElement.classList.add('dori-message', 'dori-bot-message');
                 messageElement.innerHTML = productHTML;
                 chatMessages.appendChild(messageElement);
                 chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -950,21 +949,21 @@
                 try {
                     return `
                         <div style="position: relative;">
-                            <button class="carousel-button left" onclick="scrollCarousel(this.parentElement, -200)">&#9664;</button>
-                            <div class="product-carousel">
+                            <button class="dori-carousel-button left" onclick="scrollCarousel(this.parentElement, -200)">&#9664;</button>
+                            <div class="dori-product-carousel">
                                 ${products.map(product => `
-                                    <div class="product-item">
+                                    <div class="dori-product-item">
                                         <a href="${product.url}" target="_blank" onclick="window.trackProductClick && window.trackProductClick('${product.name}', ${product.price})">
-                                            <img src="${product.image}" alt="${product.name}" class="product-image">
-                                            <div class="product-info">
-                                                <div class="product-name">${product.name}</div>
-                                                <div class="product-price">${Number(product.price).toLocaleString()} ${botData.currency}</div>
+                                            <img src="${product.image}" alt="${product.name}" class="dori-product-image">
+                                            <div class="dori-product-info">
+                                                <div class="dori-product-name">${product.name}</div>
+                                                <div class="dori-product-price">${Number(product.price).toLocaleString()} ${botData.currency}</div>
                                             </div>
                                         </a>
                                     </div>
                                 `).join('')}
                             </div>
-                            <button class="carousel-button right" onclick="scrollCarousel(this.parentElement, 200)">&#9654;</button>
+                            <button class="dori-carousel-button right" onclick="scrollCarousel(this.parentElement, 200)">&#9654;</button>
                         </div>
                     `;
                 } catch (error) {
@@ -980,22 +979,19 @@
 
             // Scroll Carousel Function
             function scrollCarousel(container, distance) {
-                const carousel = container.querySelector('.product-carousel');
+                const carousel = container.querySelector('.dori-product-carousel');
                 carousel.scrollBy({ left: distance, behavior: 'smooth' });
             }
             function updateLastAssistantMessage(newContent) {
-                const messages = chatMessages.querySelectorAll('.bot-message');
+                const messages = chatMessages.querySelectorAll('.dori-bot-message');
                 if (messages.length === 0) return;
 
                 const lastMessage = messages[messages.length - 1];
                 
                 if (typeof marked !== 'undefined') {
-                    // Parse the new content as Markdown
                     const parsedContent = marked.parse(newContent);
-                    // Set the entire content of the message
                     lastMessage.innerHTML = parsedContent;
                 } else {
-                    // If marked.js is not available, set the text content directly
                     lastMessage.textContent = newContent;
                 }
 
@@ -1160,7 +1156,7 @@
 
             // Remove Last System Message
             function removeLastSystemMessage() {
-                const messages = chatMessages.querySelectorAll('.system-message');
+                const messages = chatMessages.querySelectorAll('.dori-system-message');
                 if (messages.length > 0) {
                     const lastMessage = messages[messages.length - 1];
                     if (lastMessage.parentNode === chatMessages) {
