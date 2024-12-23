@@ -69,20 +69,76 @@
     const analytics = {
         trackEvent: (eventName, params = {}) => {
             if (window.gtag) {
-                window.gtag('event', eventName, params);
+                // Add user ID to all events
+                const userId = getUserId();
+                window.gtag('event', eventName, {
+                    ...params,
+                    userId: userId
+                });
             }
         },
         trackChat: (action, label = '') => {
             if (window.gtag) {
-                window.gtag('event', 'chat_interaction', {
+                const userId = getUserId();
+                const botName = botData.data.bot_name || 'unknown';
+                const enhancedSharingId = `${botName}-${botData.sharing_id}`;
+                
+                // Map common actions to unique event names
+                const eventName = action === 'open' ? 'chat_opened' :
+                                action === 'message_sent' ? 'message_sent' :
+                                'chat_interaction';
+                window.gtag('event', eventName, {
                     event_category: 'Chat',
                     event_action: action,
                     event_label: label,
-                    sharing_id: botData.sharing_id
+                    sharing_id: enhancedSharingId,
+                    userId: userId
                 });
             }
         }
     };
+
+    // Function to generate and manage user ID
+    function getUserId() {
+        const cookieName = 'dori_user_id';
+        let userId = getCookie(cookieName);
+        
+        if (!userId) {
+            userId = generateUUID();
+            // Set cookie to expire in 2 years
+            setCookie(cookieName, userId, 730);
+        }
+        
+        return userId;
+    }
+
+    // Cookie utility functions
+    function setCookie(name, value, days) {
+        const date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        const expires = `expires=${date.toUTCString()}`;
+        document.cookie = `${name}=${value};${expires};path=/;SameSite=Strict`;
+    }
+
+    function getCookie(name) {
+        const nameEQ = `${name}=`;
+        const ca = document.cookie.split(';');
+        for (let i = 0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+            if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+        }
+        return null;
+    }
+
+    // UUID generation function
+    function generateUUID() {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            const r = Math.random() * 16 | 0;
+            const v = c === 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+    }
 
     try{    
         function initChatWidget(botData) {
@@ -843,6 +899,7 @@
                 suggestedReplyElement.addEventListener('click', () => {
                     // Track suggested reply click
                     analytics.trackChat('suggested_reply_click', replyText);
+                    analytics.trackChat('message_sent', replyText);
                     
                     appendMessage('user', replyText);
                     const allSuggestions = chatMessages.querySelectorAll('#dori-suggested-reply');
