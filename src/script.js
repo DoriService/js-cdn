@@ -702,7 +702,6 @@
             chatButton.setAttribute('aria-label', 'Open chat');
             chatButton.style[customization.position.align] = `${customization.position.side_spacing}px`;
             chatButton.style.bottom = `${customization.position.bottom_spacing}px`;
-            customization.appearance = 'bar';
             if (customization.appearance === 'bar') {
                 chatButton.style.borderRadius = '12px 12px 0 0';
                 chatButton.style.width = 'auto';
