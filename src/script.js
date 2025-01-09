@@ -182,6 +182,71 @@
                     --dori-powered-by-bg: ${customization.theme === 'light' ? '#eeeaeb' : '#1F2937'};
                     --dori-powered-by-text: ${customization.theme === 'light' ? '#666' : 'gray'};
                 }
+
+                /* Sidebar Button Styles */
+                .BXKCcR {
+                    background-color: var(--dori-primary-color);
+                    border: none;
+                    border-radius: 50%;
+                    width: 48px;
+                    height: 48px;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+                    transition: background-color 0.3s ease;
+                }
+
+                .BXKCcR svg {
+                    transform-origin: 100% 75%;
+                }
+
+                @keyframes buttonRotate {
+                    0% { transform: rotate(0deg); }
+                    50% { transform: rotate(20deg); }
+                    100% { transform: rotate(0deg); }
+                }
+
+                @keyframes starScale {
+                    0% { transform: scale(1); }
+                    50% { transform: scale(0.7); }
+                    100% { transform: scale(1); }
+                }
+
+                @keyframes initialLoad {
+                    0% { transform: rotate(20deg); }
+                    50% { transform: rotate(0deg); }
+                    75% { transform: rotate(10deg); }
+                    100% { transform: rotate(0deg); }
+                }
+
+                .BXKCcR:hover {
+                    background-color: var(--dori-hover-color);
+                }
+
+                .BXKCcR:hover svg {
+                    animation: buttonRotate 1.2s ease;
+                }
+
+                .BXKCcR:hover path:last-child {
+                    animation: starScale 1.2s ease 1.2s;  /* Start after button rotation completes */
+                }
+
+                .BXKCcR.initial-load svg {
+                    animation: initialLoad 2s ease;
+                }
+
+                .BXKCcR.initial-load path:last-child {
+                    animation: starScale 2s ease 2s;  /* Start after initial rotation completes */
+                }
+
+                .olm6i5 {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+
                 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
 
                 /* Chat Widget Container */
@@ -668,6 +733,42 @@
                         height: 50px;
                     }
                 }
+
+                /* Styles for popup message */
+                .dori-popup-message {
+                    position: fixed;
+                    background-color: white;
+                    color: #333;
+                    padding: 12px 16px;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                    font-size: 14px;
+                    max-width: 200px;
+                    z-index: 4;
+                    opacity: 0;
+                    transition: opacity 0.3s ease;
+                    pointer-events: none;
+                    font-family: 'Poppins', sans-serif;
+                    right: 60px;
+                    top: calc(50% - 60px);
+                    transform: translateY(-100%);
+                }
+
+                .dori-popup-message::after {
+                    content: '';
+                    position: absolute;
+                    bottom: -6px;
+                    right: 20px;
+                    width: 0;
+                    height: 0;
+                    border-left: 6px solid transparent;
+                    border-right: 6px solid transparent;
+                    border-top: 6px solid white;
+                }
+
+                .dori-popup-message.show {
+                    opacity: 1;
+                }
             `;
             document.head.appendChild(style);
             // const isRTL = botData.isRTL;
@@ -702,6 +803,7 @@
             chatButton.setAttribute('aria-label', 'Open chat');
             chatButton.style[customization.position.align] = `${customization.position.side_spacing}px`;
             chatButton.style.bottom = `${customization.position.bottom_spacing}px`;
+            customization.appearance = "sidebar"
             if (customization.appearance === 'bar') {
                 chatButton.style.borderRadius = '12px 12px 0 0';
                 chatButton.style.width = 'auto';
@@ -724,28 +826,129 @@
                         </svg>
                     </div>
                 `;
+            } else if (customization.appearance === 'sidebar') {
+                chatButton.className = 'BXKCcR r9BRio Md_Vex NN8L-8 heWLCX LyRfpJ VWL_Ot _13ipK_ _5Yd-hZ Uwsb06 Wy3rmK DikYjn uyF88V df4QKn kIgovE zfa-svg-animation-icon _6MANVh EmWJce EvwuKo';
+                chatButton.setAttribute('type', 'button');
+                chatButton.setAttribute('aria-label', 'Fashion Assistant');
+                chatButton.setAttribute('aria-expanded', 'false');
+                chatButton.setAttribute('tabindex', '0');
+                chatButton.setAttribute('aria-haspopup', 'dialog');
+                chatButton.setAttribute('aria-controls', ':rad:');
+                chatButton.style.position = 'fixed';
+                chatButton.style.right = '0px';
+                chatButton.style.top = '50%';
+                chatButton.style.transform = 'translateY(-50%)';
+                // only left bottom and left top
+                chatButton.style.borderRadius = '12px 0 0 12px';
+                chatButton.style.bottom = 'auto';
+                chatButton.style.zIndex = '5';
+                
+                // Add styles for popup message
+                const popupStyles = document.createElement('style');
+                popupStyles.textContent = `
+                    .dori-popup-message {
+                        position: fixed;
+                        background-color: white;
+                        color: #333;
+                        padding: 12px 16px;
+                        border-radius: 8px;
+                        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                        font-size: 14px;
+                        max-width: 200px;
+                        z-index: 4;
+                        opacity: 0;
+                        transition: opacity 0.3s ease;
+                        pointer-events: none;
+                        font-family: 'Poppins', sans-serif;
+                        right: 20px;
+                        top: calc(50% - 40px);
+                        transform: translateY(-100%);
+                    }
+
+                    .dori-popup-message::after {
+                        content: '';
+                        position: absolute;
+                        bottom: -6px;
+                        right: 20px;
+                        width: 0;
+                        height: 0;
+                        border-left: 6px solid transparent;
+                        border-right: 6px solid transparent;
+                        border-top: 6px solid white;
+                    }
+
+                    .dori-popup-message.show {
+                        opacity: 1;
+                    }
+                `;
+                document.head.appendChild(popupStyles);
+
+                // Create popup message element
+                const popupMessage = document.createElement('div');
+                popupMessage.className = 'dori-popup-message';
+                popupMessage.textContent = uiText.popupMessage || 'Hello! What are you looking for?';
+                document.body.appendChild(popupMessage);
+                
+                // Add the new SVG icon
+                chatButton.innerHTML = `
+                    <span class="olm6i5 JT3_zV _0xLoFW u9KIT8 FCIprz uEg2FS _2Pvyxl">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <g clip-path="url(#clip0_990_39490)">
+                                <path d="M13.4733 5H21V18.2102L16.14 22V18.2102H6V12.2941" stroke="currentColor" stroke-width="2.03704" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
+                                <path d="M10 5.00002C7.74328 5.00002 6.00049 3.25689 6.00049 1C6.00049 3.25689 4.25672 5.00021 2 5.00021C4.25672 5.00021 5.9997 6.74311 5.9997 9C5.9997 6.74311 7.74328 5.00002 10 5.00002Z" stroke="currentColor" stroke-width="2.03704" stroke-linejoin="round"></path>
+                            </g>
+                            <defs>
+                                <clipPath id="clip0_990_39490">
+                                    <rect width="24" height="24"></rect>
+                                </clipPath>
+                            </defs>
+                        </svg>
+                    </span>
+                `;
+
+                // Add initial load animation with delay
+                requestAnimationFrame(() => {
+                    setTimeout(() => {
+                        chatButton.classList.add('initial-load');
+                        setTimeout(() => {
+                            chatButton.classList.remove('initial-load');
+                            // Show popup message after initial animation
+                            setTimeout(() => {
+                                if (!chatBox.classList.contains('show')) { // Only show if chat is not open
+                                    popupMessage.classList.add('show');
+                                    // // Hide popup after 5 seconds
+                                    // setTimeout(() => {
+                                    //     popupMessage.classList.remove('show');
+                                    // }, 5000);
+                                }
+                            }, 5000); // Show popup 5 seconds after initial animation
+                        }, 4000);
+                    }, 3000);
+                });
+
+                // Hide popup when chat is opened
+                chatButton.addEventListener('click', () => {
+                    popupMessage.classList.remove('show');
+                });
             } else {
                 chatButton.style.borderRadius = '50%';
                 chatButton.style.width = '60px';
                 chatButton.style.height = '60px';
+                // Use the same new SVG icon for bubble mode
                 chatButton.innerHTML = `
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" 
-                        xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                        <path d="M21 11.5C21.0034 12.8199 20.6951 14.1219 20.1 
-                                15.3C19.3944 16.7118 18.3098 17.8992 16.9674 
-                                18.7293C15.6251 19.5594 14.0782 19.9994 
-                                12.5 20C11.1801 20.0035 9.87812 19.6951 
-                                8.7 19.1L3 21L4.9 15.3C4.30493 14.1219 
-                                3.99656 12.8199 4 11.5C4.00061 9.92179 
-                                4.44061 8.37488 5.27072 7.03258C6.10083 
-                                5.69028 7.28825 4.6056 8.7 3.90003C9.87812 
-                                3.30496 11.1801 2.99659 12.5 3.00003H13C15.0843 
-                                3.11502 17.053 3.99479 18.5291 
-                                5.47089C20.0052 6.94699 20.885 
-                                8.91568 21 11V11.5Z" 
-                            stroke="white" stroke-width="2" 
-                            stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
+                    <span class="olm6i5">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <g clip-path="url(#clip0_990_39490)">
+                                <path d="M13.4733 5H21V18.2102L16.14 22V18.2102H6V12.2941" stroke="currentColor" stroke-width="2.03704" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
+                                <path d="M10 5.00002C7.74328 5.00002 6.00049 3.25689 6.00049 1C6.00049 3.25689 4.25672 5.00021 2 5.00021C4.25672 5.00021 5.9997 6.74311 5.9997 9C5.9997 6.74311 7.74328 5.00002 10 5.00002Z" stroke="currentColor" stroke-width="2.03704" stroke-linejoin="round"></path>
+                            </g>
+                            <defs>
+                                <clipPath id="clip0_990_39490">
+                                    <rect width="24" height="24"></rect>
+                                </clipPath>
+                            </defs>
+                        </svg>
+                    </span>
                 `;
             }
 
