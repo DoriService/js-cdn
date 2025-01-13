@@ -997,23 +997,20 @@
                         chatButton.classList.add('initial-load');
                         setTimeout(() => {
                             chatButton.classList.remove('initial-load');
-                            // Show popup message after initial animation
+                            // Show popup message after initial animation only if chat hasn't been opened yet
                             setTimeout(() => {
-                                if (!chatBox.classList.contains('show')) { // Only show if chat is not open
+                                if (!chatBox.classList.contains('show') && !sessionStorage.getItem('chatInteracted')) {
                                     popupMessage.classList.add('show');
-                                    // // Hide popup after 5 seconds
-                                    // setTimeout(() => {
-                                    //     popupMessage.classList.remove('show');
-                                    // }, 5000);
                                 }
                             }, 5000); // Show popup 5 seconds after initial animation
                         }, 4000);
                     }, 3000);
                 });
 
-                // Hide popup when chat is opened
+                // Hide popup when chat is opened and mark as interacted
                 chatButton.addEventListener('click', () => {
                     popupMessage.classList.remove('show');
+                    sessionStorage.setItem('chatInteracted', 'true');
                 });
             } else {
                 chatButton.style.borderRadius = '50%';
