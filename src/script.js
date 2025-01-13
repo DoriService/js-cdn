@@ -864,7 +864,70 @@
                 chatButton.style.alignItems = 'center';
                 chatButton.style.justifyContent = 'center';
                 chatButton.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.15)';
+                chatButton.style.transition = 'right 0.3s ease';
+
+                // Define both icons (chat and arrow)
+                const chatIcon = `
+                    <span class="olm6i5 chat-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <g clip-path="url(#clip0_990_39490)">
+                                <path d="M13.4733 5H21V18.2102L16.14 22V18.2102H6V12.2941" stroke="currentColor" stroke-width="2.03704" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
+                                <path d="M10 5.00002C7.74328 5.00002 6.00049 3.25689 6.00049 1C6.00049 3.25689 4.25672 5.00021 2 5.00021C4.25672 5.00021 5.9997 6.74311 5.9997 9C5.9997 6.74311 7.74328 5.00002 10 5.00002Z" stroke="currentColor" stroke-width="2.03704" stroke-linejoin="round"></path>
+                            </g>
+                            <defs>
+                                <clipPath id="clip0_990_39490">
+                                    <rect width="24" height="24"></rect>
+                                </clipPath>
+                            </defs>
+                        </svg>
+                    </span>
+                `;
+
+                const arrowIcon = `
+                    <span class="olm6i5 arrow-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M9 5L16 12L9 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </span>
+                `;
+
+                // Add styles for different button states
+                const buttonStyles = document.createElement('style');
+                buttonStyles.textContent = `
+                    #dori-chat-button.chat-mode:hover .chat-icon svg {
+                        animation: buttonRotate 1.2s ease;
+                    }
+                    
+                    #dori-chat-button.chat-mode:hover .chat-icon path:last-child {
+                        animation: starScale 1.2s ease 1.2s;
+                    }
+                    
+                    #dori-chat-button.chat-mode.initial-load .chat-icon svg {
+                        animation: initialLoad 2s ease;
+                    }
+                    
+                    #dori-chat-button.chat-mode.initial-load .chat-icon path:last-child {
+                        animation: starScale 2s ease 2s;
+                    }
+
+                    .arrow-icon svg {
+                        animation: none !important;
+                    }
+
+                    .arrow-icon path {
+                        animation: none !important;
+                    }
+                `;
+                document.head.appendChild(buttonStyles);
+
+                // Set initial icon and class
+                chatButton.innerHTML = chatIcon;
+                chatButton.classList.add('chat-mode');
                 
+                // Store icons on the button element for easy access
+                chatButton.dataset.chatIcon = chatIcon;
+                chatButton.dataset.arrowIcon = arrowIcon;
+
                 // Add styles for popup message
                 const popupStyles = document.createElement('style');
                 popupStyles.textContent = `
@@ -1065,7 +1128,18 @@
 
 
             // Event Listeners
-            chatButton.addEventListener('click', openChat);
+            chatButton.addEventListener('click', () => {
+                if (customization.appearance === 'sidebar') {
+                    // Toggle chat box
+                    if (chatBox.classList.contains('show')) {
+                        closeChat();
+                    } else {
+                        openChat();
+                    }
+                } else {
+                    openChat();
+                }
+            });
             closeButton.addEventListener('click', closeChat);
             sendButton.addEventListener('click', sendMessage);
             chatInput.addEventListener('keypress', (e) => {
@@ -1080,9 +1154,18 @@
                 // Use requestAnimationFrame to ensure display: flex is applied before adding show class
                 requestAnimationFrame(() => {
                     chatBox.classList.add('show');
+                    if (customization.appearance === 'sidebar') {
+                        // Move button to left side of chat box and change icon
+                        chatButton.style.right = '400px'; // Match chat box width
+                        chatButton.innerHTML = chatButton.dataset.arrowIcon;
+                        chatButton.classList.remove('chat-mode'); // Remove chat mode class
+                        chatButton.setAttribute('aria-label', 'Close chat');
+                    }
                 });
                 chatBox.setAttribute('aria-hidden', 'false');
-                chatButton.style.display = 'none';
+                if (customization.appearance !== 'sidebar') {
+                    chatButton.style.display = 'none';
+                }
                 chatInput.focus();
                 
                 // Track chat open event
@@ -1147,6 +1230,13 @@
             // Close Chat Function
             function closeChat() {
                 chatBox.classList.remove('show');
+                if (customization.appearance === 'sidebar') {
+                    // Move button back to right side and restore chat icon
+                    chatButton.style.right = '0';
+                    chatButton.innerHTML = chatButton.dataset.chatIcon;
+                    chatButton.classList.add('chat-mode'); // Add chat mode class back
+                    chatButton.setAttribute('aria-label', 'Open chat');
+                }
                 setTimeout(() => {
                     chatBox.style.display = 'none';
                     if (customization.appearance === 'sidebar') {
@@ -1154,9 +1244,11 @@
                     }
                 }, 300); // Match the transition duration
                 chatBox.setAttribute('aria-hidden', 'true');
-                requestAnimationFrame(() => {
-                    chatButton.style.display = 'flex';
-                });
+                if (customization.appearance !== 'sidebar') {
+                    requestAnimationFrame(() => {
+                        chatButton.style.display = 'flex';
+                    });
+                }
                 
                 // Track chat close event
                 analytics.trackChat('close');
