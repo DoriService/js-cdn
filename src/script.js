@@ -159,7 +159,7 @@
                     bottom_spacing: 20
                 }
             };
-            customization.appearance = 'sidebar';
+            // customization.appearance = 'sidebar';
 
             
             style.textContent = `
@@ -726,19 +726,32 @@
                 /* Responsive Design */
                 @media screen and (max-width: 480px) {
                     #dori-chat-box {
-                        width: 90%;
-                        height: 65vh;
-                        max-height: 600px;
-                        min-height: 350px;
-                        border-radius: 16px;
-                        margin: 0 auto;
-                        left: 0;
-                        right: 0;
+                        width: 100% !important;
+                        height: 100vh !important;
+                        max-height: none !important;
+                        min-height: 100vh !important;
+                        border-radius: 0 !important;
+                        margin: 0 !important;
+                        left: 0 !important;
+                        right: 0 !important;
+                        top: 0 !important;
+                        bottom: 0 !important;
+                        position: fixed !important;
                     }
 
                     #dori-chat-button {
                         width: 50px;
                         height: 50px;
+                    }
+
+                    #dori-chat-widget-container {
+                        width: 100% !important;
+                        height: 100% !important;
+                        right: 0 !important;
+                        left: 0 !important;
+                        top: 0 !important;
+                        bottom: 0 !important;
+                        margin: 0 !important;
                     }
                 }
 
@@ -818,7 +831,6 @@
             chatButton.setAttribute('aria-label', 'Open chat');
             chatButton.style[customization.position.align] = `${customization.position.side_spacing}px`;
             chatButton.style.bottom = `${customization.position.bottom_spacing}px`;
-            customization.appearance = "sidebar"
             if (customization.appearance === 'bar') {
                 chatButton.style.borderRadius = '12px 12px 0 0';
                 chatButton.style.width = 'auto';
