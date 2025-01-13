@@ -159,6 +159,7 @@
                     bottom_spacing: 20
                 }
             };
+            customization.appearance = 'sidebar';
 
             
             style.textContent = `
@@ -290,29 +291,36 @@
 
                 /* Chat Box Styles */
                 #dori-chat-box {
-                    width: 360px;
-                    height: 65vh;
-                    max-height: 600px;
-                    min-height: 350px;
-                    border-radius: 16px;
+                    width: ${customization.appearance === 'sidebar' ? '400px' : '360px'};
+                    height: ${customization.appearance === 'sidebar' ? '100vh' : '65vh'};
+                    max-height: ${customization.appearance === 'sidebar' ? 'none' : '600px'};
+                    min-height: ${customization.appearance === 'sidebar' ? '100vh' : '350px'};
+                    border-radius: ${customization.appearance === 'sidebar' ? '0' : '16px'};
                     background-color: var(--dori-creamy);
                     color: var(--dori-text-color);
                     box-shadow: ${customization.theme === 'light' ? 
-                        '0 6px 20px rgba(0,0,0,0.1)' : 
-                        '0 8px 24px rgba(0,0,0,0.4)'};
-                    display: flex;
+                        'rgba(0,0,0,0.1) 0 6px 20px' : 
+                        'rgba(0,0,0,0.4) 0 8px 24px'};
+                    display: none; /* Initially hidden */
                     flex-direction: column;
                     overflow: hidden;
                     opacity: 0;
-                    transform: translateY(20px);
+                    transform: ${customization.appearance === 'sidebar' ? 'translateX(100%)' : 'translateY(20px)'};
                     transition: opacity 0.3s ease, transform 0.3s ease;
                     position: fixed;
-                    bottom: ${customization.position.bottom_spacing}px;
+                    top: ${customization.appearance === 'sidebar' ? '0' : 'auto'};
+                    bottom: ${customization.appearance === 'sidebar' ? '0' : `${customization.position.bottom_spacing}px`};
+                    right: ${customization.appearance === 'sidebar' ? '0' : 'auto'};
+                    margin: 0;
+                    padding: 0;
+                    z-index: 2147483646;
+                    pointer-events: none; /* Initially no pointer events */
                 }
 
                 #dori-chat-box.show {
                     opacity: 1;
-                    transform: translateY(0);
+                    transform: ${customization.appearance === 'sidebar' ? 'translateX(0)' : 'translateY(0)'};
+                    pointer-events: all; /* Enable pointer events when shown */
                 }
 
                 #dori-chat-header {
@@ -795,8 +803,15 @@
             container.id = 'dori-chat-widget-container';
             container.style.direction = isRTL ? 'rtl' : 'ltr';
             container.style.position = 'fixed';
-            container.style.bottom = `${customization.position.bottom_spacing}px`;
-            container.style[customization.position.align] = `${customization.position.side_spacing}px`;
+            container.style.bottom = customization.appearance === 'sidebar' ? '0' : `${customization.position.bottom_spacing}px`;
+            container.style[customization.position.align] = customization.appearance === 'sidebar' ? '0' : `${customization.position.side_spacing}px`;
+            container.style.zIndex = '2147483647';
+            container.style.width = customization.appearance === 'sidebar' ? '400px' : 'auto';
+            container.style.height = customization.appearance === 'sidebar' ? '100%' : 'auto';
+            container.style.right = customization.appearance === 'sidebar' ? '0' : 'auto';
+            container.style.top = customization.appearance === 'sidebar' ? '0' : 'auto';
+            container.style.margin = '0';
+            container.style.padding = '0';
 
             const chatButton = document.createElement('button');
             chatButton.id = 'dori-chat-button';
@@ -838,10 +853,17 @@
                 chatButton.style.right = '0px';
                 chatButton.style.top = '50%';
                 chatButton.style.transform = 'translateY(-50%)';
-                // only left bottom and left top
                 chatButton.style.borderRadius = '12px 0 0 12px';
                 chatButton.style.bottom = 'auto';
-                chatButton.style.zIndex = '5';
+                chatButton.style.zIndex = '2147483647';
+                chatButton.style.backgroundColor = 'var(--dori-primary-color)';
+                chatButton.style.cursor = 'pointer';
+                chatButton.style.width = '48px';
+                chatButton.style.height = '48px';
+                chatButton.style.display = 'flex';
+                chatButton.style.alignItems = 'center';
+                chatButton.style.justifyContent = 'center';
+                chatButton.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.15)';
                 
                 // Add styles for popup message
                 const popupStyles = document.createElement('style');
@@ -972,7 +994,9 @@
             chatBox.style.display = 'none'; // Initially hidden
             chatBox.style.backgroundColor = customization.theme === 'light' ? '#FFFFFF' : '#1A202C';
             chatBox.style.color = customization.theme === 'light' ? '#2D3748' : '#FFFFFF';
-            chatBox.style[customization.position.align] = `${customization.position.side_spacing}px`;
+            if (customization.appearance !== 'sidebar') {
+                chatBox.style[customization.position.align] = `${customization.position.side_spacing}px`;
+            }
             chatBox.style.bottom = `${customization.position.bottom_spacing}px`;
 
             const chatHeader = document.createElement('div');
@@ -1052,8 +1076,11 @@
 
             // Open Chat Function
             function openChat() {
-                chatBox.classList.add('show');
                 chatBox.style.display = 'flex';
+                // Use requestAnimationFrame to ensure display: flex is applied before adding show class
+                requestAnimationFrame(() => {
+                    chatBox.classList.add('show');
+                });
                 chatBox.setAttribute('aria-hidden', 'false');
                 chatButton.style.display = 'none';
                 chatInput.focus();
@@ -1061,10 +1088,15 @@
                 // Track chat open event
                 analytics.trackChat('open');
                 
-                // Ensure chat box appears on the correct side
-                chatBox.style[customization.position.align] = `${customization.position.side_spacing}px`;
-                // Reset the opposite side position
-                chatBox.style[customization.position.align === 'left' ? 'right' : 'left'] = 'auto';
+                // Handle positioning based on appearance mode
+                if (customization.appearance === 'sidebar') {
+                    document.body.style.overflow = 'hidden'; // Prevent body scroll when sidebar is open
+                } else {
+                    // Ensure chat box appears on the correct side
+                    chatBox.style[customization.position.align] = `${customization.position.side_spacing}px`;
+                    // Reset the opposite side position
+                    chatBox.style[customization.position.align === 'left' ? 'right' : 'left'] = 'auto';
+                }
                 
                 if (chatMessages.childElementCount === 0) {
                     appendMessage('bot', botData.wellcomeMessage);
@@ -1115,9 +1147,16 @@
             // Close Chat Function
             function closeChat() {
                 chatBox.classList.remove('show');
-                chatBox.style.display = 'none';
+                setTimeout(() => {
+                    chatBox.style.display = 'none';
+                    if (customization.appearance === 'sidebar') {
+                        document.body.style.overflow = ''; // Restore body scroll
+                    }
+                }, 300); // Match the transition duration
                 chatBox.setAttribute('aria-hidden', 'true');
-                chatButton.style.display = 'flex';
+                requestAnimationFrame(() => {
+                    chatButton.style.display = 'flex';
+                });
                 
                 // Track chat close event
                 analytics.trackChat('close');
