@@ -159,8 +159,7 @@
                     bottom_spacing: 20
                 }
             };
-            // customization.appearance = 'sidebar';
-
+            customization.appearance = 'sidebar';
             
             style.textContent = `
                 :root {
@@ -324,7 +323,7 @@
                 }
 
                 #dori-chat-header {
-                    background-color: var(--dori-primary-color); 
+                    background-color: var(--dori-creamy); 
                     color: white;
                     padding: 20px 24px;
                     display: flex;
@@ -789,6 +788,42 @@
 
                 .dori-popup-message.show {
                     opacity: 1;
+                }
+
+                /* Loading Animation Styles */
+                .dori-loading-dots {
+                    display: inline-flex;
+                    gap: 4px;
+                    align-items: center;
+                    height: 24px;
+                }
+
+                .dori-loading-dots span {
+                    width: 6px;
+                    height: 6px;
+                    background-color: ${customization.theme === 'light' ? '#666' : '#fff'};
+                    border-radius: 50%;
+                    animation: loadingDots 1.4s infinite;
+                    opacity: 0.4;
+                }
+
+                .dori-loading-dots span:nth-child(2) {
+                    animation-delay: 0.2s;
+                }
+
+                .dori-loading-dots span:nth-child(3) {
+                    animation-delay: 0.4s;
+                }
+
+                @keyframes loadingDots {
+                    0%, 100% {
+                        opacity: 0.4;
+                        transform: scale(1);
+                    }
+                    50% {
+                        opacity: 1;
+                        transform: scale(1.1);
+                    }
                 }
             `;
             document.head.appendChild(style);
@@ -1416,7 +1451,7 @@
             async function callApi(message) {
                 try {
                     sendButton.disabled = true;
-                    appendMessage('system', uiText.typing);
+                    const loadingMessage = appendMessage('bot', '<div class="dori-loading-dots"><span></span><span></span><span></span></div>');
 
                     // Track API call start
                     analytics.trackChat('api_call_start');
@@ -1486,7 +1521,13 @@
                                     } else if (parsed.text) {
                                         fullMessage += parsed.text; // Accumulate the full message
                                         if (!currentBotMessage) {
-                                            currentBotMessage = appendMessage('bot', fullMessage);
+                                            // Update the loading message instead of creating a new one
+                                            const loadingElement = loadingMessage.querySelector('.dori-loading-dots');
+                                            if (loadingElement) {
+                                                loadingElement.remove();
+                                            }
+                                            loadingMessage.innerHTML = fullMessage;
+                                            currentBotMessage = loadingMessage;
                                         } else {
                                             updateLastAssistantMessage(fullMessage);
                                         }
@@ -1511,7 +1552,13 @@
                                     } else if (parsed.text) {
                                         fullMessage += parsed.text; // Accumulate the full message
                                         if (!currentBotMessage) {
-                                            currentBotMessage = appendMessage('bot', fullMessage);
+                                            // Update the loading message instead of creating a new one
+                                            const loadingElement = loadingMessage.querySelector('.dori-loading-dots');
+                                            if (loadingElement) {
+                                                loadingElement.remove();
+                                            }
+                                            loadingMessage.innerHTML = fullMessage;
+                                            currentBotMessage = loadingMessage;
                                         } else {
                                             updateLastAssistantMessage(fullMessage);
                                         }
@@ -1527,8 +1574,7 @@
                         }
                     }
 
-                    // Remove the 'typing' message after completion
-                    removeLastSystemMessage();
+                    // Don't remove the loading message anymore since we reused it
                     currentBotMessage = null; // Reset for the next message
 
                     // Track API call success
@@ -1545,7 +1591,10 @@
                         }
                     });
                     sessionStorage.removeItem('thread_id');
-                    removeLastSystemMessage();
+                    const loadingMessageElement = chatMessages.querySelector('.dori-loading-dots');
+                    if (loadingMessageElement) {
+                        loadingMessageElement.closest('.dori-message-wrapper').remove();
+                    }
                     appendMessage('system', uiText.error);
                     
                     // Track API call error
