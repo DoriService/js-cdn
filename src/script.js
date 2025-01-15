@@ -159,7 +159,6 @@
                     bottom_spacing: 20
                 }
             };
-            customization.appearance = 'sidebar';
             
             style.textContent = `
                 :root {
