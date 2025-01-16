@@ -1,4 +1,32 @@
 (async function() {
+    // Add Google Tag Manager initialization at the start of the IIFE
+    function initGoogleTagManager() {
+        // Add GTM script to head
+        (function(w,d,s,l,i){
+            w[l]=w[l]||[];
+            w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});
+            var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
+            j.async=true;
+            j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+            f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-KDZ57RV9');
+
+        // Add GTM noscript iframe to body
+        const noscript = document.createElement('noscript');
+        const iframe = document.createElement('iframe');
+        iframe.src = 'https://www.googletagmanager.com/ns.html?id=GTM-KDZ57RV9';
+        iframe.height = '0';
+        iframe.width = '0';
+        iframe.style.display = 'none';
+        iframe.style.visibility = 'hidden';
+        noscript.appendChild(iframe);
+        document.body.insertBefore(noscript, document.body.firstChild);
+    }
+
+    // Initialize Google Tag Manager before other operations
+    initGoogleTagManager();
+
     // Add Sentry initialization at the start of the IIFE
     function initSentry() {
         const script = document.createElement('script');
@@ -322,7 +350,7 @@
                 }
 
                 #dori-chat-header {
-                    background-color: var(--dori-creamy); 
+                    background-color: var(--dori-primary-color); 
                     color: white;
                     padding: 20px 24px;
                     display: flex;
@@ -1107,7 +1135,7 @@
 
             const chatHeader = document.createElement('div');
             chatHeader.id = 'dori-chat-header';
-            
+            chatHeader.style.backgroundColor = customization.appearance === 'sidebar' ? 'var(--dori-creamy)' : 'var(--dori-primary-color)';
             chatHeader.innerHTML = `<span>${uiText.chatWithUs}</span>`;
 
             const closeButton = document.createElement('button');
