@@ -1237,7 +1237,6 @@
                 if (customization.appearance !== 'sidebar') {
                     chatButton.style.display = 'none';
                 }
-                chatInput.focus();
                 
                 // Track chat open event
                 analytics.trackChat('open');
