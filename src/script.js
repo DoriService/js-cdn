@@ -8,7 +8,7 @@
                 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
                 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-                })(window,document,'script','dataLayer','GTM-XXXXX');
+                })(window,document,'script','dataLayer','GTM-KDZ57RV9');
             `;
             document.head.appendChild(script);
         });
@@ -159,6 +159,8 @@
 
     try{    
         function initChatWidget(botData) {
+            addViewportMeta();
+            
             loadGoogleAnalytics().catch(error => {
                 console.error('Failed to load Google Analytics:', error);
             });
@@ -742,9 +744,9 @@
                 @media screen and (max-width: 480px) {
                     #dori-chat-box {
                         width: 100% !important;
-                        height: 100vh !important;
-                        max-height: none !important;
-                        min-height: 100vh !important;
+                        height: 100% !important;
+                        max-height: 100% !important;
+                        min-height: 100% !important;
                         border-radius: 0 !important;
                         margin: 0 !important;
                         left: 0 !important;
@@ -752,11 +754,40 @@
                         top: 0 !important;
                         bottom: 0 !important;
                         position: fixed !important;
+                        
+                        /* Add flex layout to ensure proper content positioning */
+                        display: flex !important;
+                        flex-direction: column !important;
+                    }
+
+                    #dori-chat-box-messages {
+                        /* Allow messages container to scroll independently */
+                        flex: 1 1 auto !important;
+                        height: 0 !important; /* Force proper scrolling behavior */
+                    }
+
+                    #dori-chat-input-container {
+                        /* Ensure input stays at bottom and above keyboard */
+                        position: sticky !important;
+                        bottom: 0 !important;
+                        background-color: var(--dori-input-bg);
+                        padding: 10px !important;
+                        /* Add safe area padding for newer iOS devices */
+                        padding-bottom: calc(10px + env(safe-area-inset-bottom)) !important;
+                    }
+
+                    #dori-powered-by {
+                        /* Ensure powered by stays above input */
+                        position: sticky !important;
+                        bottom: 0 !important;
+                        z-index: 1;
                     }
 
                     #dori-chat-button {
                         width: 50px;
                         height: 50px;
+                        /* Ensure button respects safe area */
+                        bottom: calc(20px + env(safe-area-inset-bottom)) !important;
                     }
 
                     #dori-chat-widget-container {
@@ -1637,6 +1668,33 @@
             if (customization.appearance === 'bar') {
                 chatBox.style.bottom = '48px';
             }
+
+            // Add touch event handlers to prevent page scroll when scrolling chat
+            chatMessages.addEventListener('touchmove', function(e) {
+                e.stopPropagation();
+            }, { passive: true });
+
+            // Prevent body scroll when chat is open on mobile
+            function toggleBodyScroll(disable) {
+                if (disable) {
+                    document.body.style.overflow = 'hidden';
+                    document.body.style.position = 'fixed';
+                    document.body.style.width = '100%';
+                } else {
+                    document.body.style.overflow = '';
+                    document.body.style.position = '';
+                    document.body.style.width = '';
+                }
+            }
+
+            // Handle resize events
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 480) {
+                    toggleBodyScroll(false);
+                } else if (chatBox.classList.contains('show')) {
+                    toggleBodyScroll(true);
+                }
+            });
         }
 
         async function fetchBotDataBySharingID(sharingID) {
