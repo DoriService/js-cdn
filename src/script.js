@@ -920,12 +920,15 @@
             container.style.top = customization.appearance === 'sidebar' ? '0' : 'auto';
             container.style.margin = '0';
             container.style.padding = '0';
+            container.style.pointerEvents = 'none';
 
             const chatButton = document.createElement('button');
             chatButton.id = 'dori-chat-button';
             chatButton.setAttribute('aria-label', 'Open chat');
             chatButton.style[customization.position.align] = `${customization.position.side_spacing}px`;
             chatButton.style.bottom = `${customization.position.bottom_spacing}px`;
+            chatButton.style.pointerEvents = 'auto';
+            chatButton.style.zIndex = '2147483647';
             if (customization.appearance === 'bar') {
                 chatButton.style.borderRadius = '12px 12px 0 0';
                 chatButton.style.width = 'auto';
@@ -1165,16 +1168,19 @@
                 chatBox.style[customization.position.align] = `${customization.position.side_spacing}px`;
             }
             chatBox.style.bottom = `${customization.position.bottom_spacing}px`;
+            chatBox.style.pointerEvents = 'none';
 
             const chatHeader = document.createElement('div');
             chatHeader.id = 'dori-chat-header';
-            chatHeader.style.backgroundColor = customization.appearance === 'sidebar' ? 'var(--dori-creamy)' : 'var(--dori-primary-color)';
+            chatHeader.style.backgroundColor = customization.appearance === 'sidebar' && window.innerWidth > 768 ? 'var(--dori-creamy)' : 'var(--dori-primary-color)';
+            chatHeader.style.color = customization.appearance === 'sidebar' && window.innerWidth > 768 ? '#666' : 'white';
             chatHeader.innerHTML = `<span>${uiText.chatWithUs}</span>`;
 
             const closeButton = document.createElement('button');
             closeButton.id = 'dori-close-chat';
             closeButton.setAttribute('aria-label', 'Close chat');
             closeButton.innerHTML = '&times;';
+            closeButton.style.color = customization.appearance === 'sidebar' && window.innerWidth > 768 ? '#666' : 'white';
             chatHeader.appendChild(closeButton);
 
             const chatMessages = document.createElement('div');
@@ -1254,15 +1260,15 @@
 
             // Open Chat Function
             function openChat() {
+                container.style.pointerEvents = 'auto';
+                chatBox.style.pointerEvents = 'auto';
                 chatBox.style.display = 'flex';
-                // Use requestAnimationFrame to ensure display: flex is applied before adding show class
                 requestAnimationFrame(() => {
                     chatBox.classList.add('show');
                     if (customization.appearance === 'sidebar') {
-                        // Move button to left side of chat box and change icon
-                        chatButton.style.right = '400px'; // Match chat box width
+                        chatButton.style.right = '400px';
                         chatButton.innerHTML = chatButton.dataset.arrowIcon;
-                        chatButton.classList.remove('chat-mode'); // Remove chat mode class
+                        chatButton.classList.remove('chat-mode');
                         chatButton.setAttribute('aria-label', 'Close chat');
                     }
                 });
@@ -1270,7 +1276,7 @@
                 if (customization.appearance !== 'sidebar') {
                     chatButton.style.display = 'none';
                 }
-``                
+                
                 // Track chat open event
                 analytics.trackChat('open');
                 
@@ -1334,18 +1340,19 @@
             function closeChat() {
                 chatBox.classList.remove('show');
                 if (customization.appearance === 'sidebar') {
-                    // Move button back to right side and restore chat icon
                     chatButton.style.right = '0';
                     chatButton.innerHTML = chatButton.dataset.chatIcon;
-                    chatButton.classList.add('chat-mode'); // Add chat mode class back
+                    chatButton.classList.add('chat-mode');
                     chatButton.setAttribute('aria-label', 'Open chat');
                 }
                 setTimeout(() => {
                     chatBox.style.display = 'none';
+                    chatBox.style.pointerEvents = 'none';
+                    container.style.pointerEvents = 'none';
                     if (customization.appearance === 'sidebar') {
-                        document.body.style.overflow = ''; // Restore body scroll
+                        document.body.style.overflow = '';
                     }
-                }, 300); // Match the transition duration
+                }, 300);
                 chatBox.setAttribute('aria-hidden', 'true');
                 if (customization.appearance !== 'sidebar') {
                     requestAnimationFrame(() => {
