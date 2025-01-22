@@ -88,7 +88,7 @@
             if (window.gtag) {
                 // Add user ID to all events
                 const userId = getUserId();
-                const enhancedSharingId = `${botName}-${botData.sharing_id}`;
+                const enhancedSharingId = `${botData.data.bot_name}-${botData.data.sharing_id}`;
                 window.gtag('event', eventName, {
                     ...params,
                     sharing_id: enhancedSharingId,
@@ -100,7 +100,7 @@
             if (window.gtag) {
                 const userId = getUserId();
                 const botName = botData.data.bot_name || 'unknown';
-                const enhancedSharingId = `${botName}-${botData.sharing_id}`;
+                const enhancedSharingId = `${botName}-${botData.data.sharing_id}`;
                 
                 // Map common actions to unique event names
                 const eventName = action === 'open' ? 'chat_opened' :
@@ -1459,7 +1459,7 @@
                                         <a href="${product.url}" 
                                            target="_blank"
                                            rel="noopener noreferrer" 
-                                           onclick="window.trackProductClick && window.trackProductClick('${product.name}', ${product.price})"
+                                           onclick="try { window.trackProductClick('${product.name.replace(/'/g, "\\'")}', ${product.price}); } catch(e) { console.error('Error in onclick:', e); }"
                                            style="
                                                min-width: 140px;
                                                max-width: 140px;
@@ -1531,13 +1531,33 @@
             // Expose scrollCarousel and trackProductClick globally
             window.scrollCarousel = scrollCarousel;
             window.trackProductClick = function(productName, productPrice) {
-                analytics.trackEvent('product_click', {
-                    event_category: 'Product',
-                    event_action: 'click',
-                    event_label: productName,
-                    price: productPrice,
-                    sharing_id: botData.sharing_id
-                });
+                try {
+                    if (!window.gtag) {
+                        console.warn('Google Analytics not initialized');
+                        return;
+                    }
+                    if (!botData || !botData.sharing_id) {
+                        console.warn('botData not properly initialized');
+                        return;
+                    }
+                    analytics.trackEvent('product_click', {
+                        event_category: 'Product',
+                        event_action: 'click',
+                        event_label: productName,
+                        price: productPrice,
+                        sharing_id: botData.sharing_id
+                    });
+                    console.log('Product click tracked successfully');
+                } catch (error) {
+                    console.error('Error tracking product click:', error);
+                    Sentry.captureException(error, {
+                        extra: {
+                            context: 'trackProductClick',
+                            productName,
+                            productPrice
+                        }
+                    });
+                }
             };
 
             // Call API Function with Streaming
@@ -1755,7 +1775,7 @@
 
         }
         botData = await fetchBotDataBySharingID(SHARING_ID);
-        botData.sharing_id = SHARING_ID;
+        botData.data.sharing_id = SHARING_ID;
         if (botData.error) {
             errorMessage.innerHTML = botData.error;
         } else if (botData.data) {
