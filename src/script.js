@@ -88,8 +88,10 @@
             if (window.gtag) {
                 // Add user ID to all events
                 const userId = getUserId();
+                const enhancedSharingId = `${botName}-${botData.sharing_id}`;
                 window.gtag('event', eventName, {
                     ...params,
+                    sharing_id: enhancedSharingId,
                     userId: userId
                 });
             }
@@ -502,9 +504,7 @@
 
                 .dori-product-item:hover {
                     transform: translateY(-2px);
-                    box-shadow: ${customization.theme === 'light' ? 
-                        'rgba(0, 0, 0, 0.1) 0px 4px 8px' : 
-                        'rgba(0, 0, 0, 0.3) 0px 4px 8px'};
+                  
                 }
 
                 .dori-product-image {
@@ -1440,10 +1440,11 @@
             // Append Products to Chat
             function appendProducts(products) {
                 const productHTML = createProductHTML(products);
-                const messageElement = document.createElement('div');
-                messageElement.classList.add('dori-message', 'dori-bot-message');
-                messageElement.innerHTML = productHTML;
-                chatMessages.appendChild(messageElement);
+                const productContainer = document.createElement('div');
+                productContainer.style.width = '100%';
+                productContainer.style.margin = '12px 0';
+                productContainer.innerHTML = productHTML;
+                chatMessages.appendChild(productContainer);
                 chatMessages.scrollTop = chatMessages.scrollHeight;
             }
 
@@ -1451,22 +1452,53 @@
             function createProductHTML(products) {
                 try {
                     return `
-                        <div style="position: relative;">
-                            <button class="dori-carousel-button left" onclick="scrollCarousel(this.parentElement, -200)">&#9664;</button>
-                            <div class="dori-product-carousel">
-                                ${products.map(product => `
-                                    <div class="dori-product-item">
-                                        <a href="${product.url}" target="_blank" onclick="window.trackProductClick && window.trackProductClick('${product.name}', ${product.price})">
-                                            <img src="${product.image}" alt="${product.name}" class="dori-product-image">
-                                            <div class="dori-product-info">
-                                                <div class="dori-product-name">${product.name}</div>
-                                                <div class="dori-product-price">${Number(product.price).toLocaleString()} ${botData.currency}</div>
+                        <div style="width: -webkit-fill-available ;margin: 0 -23px; background: var(--dori-message-bg-bot); border-top: 1px solid var(--dori-product-border); border-bottom: 1px solid var(--dori-product-border);">
+                            <div style="overflow-x: auto; scrollbar-width: thin; scrollbar-color: var(--dori-scrollbar-thumb) var(--dori-scrollbar-bg);">
+                                <div style="display: flex; gap: 8px; padding: 16px;">
+                                    ${products.map(product => `
+                                        <a href="${product.url}" 
+                                           target="_blank"
+                                           rel="noopener noreferrer" 
+                                           onclick="window.trackProductClick && window.trackProductClick('${product.name}', ${product.price})"
+                                           style="
+                                               min-width: 140px;
+                                               max-width: 140px;
+                                               flex-shrink: 0;
+                                               border-radius: 8px;
+                                               overflow: hidden;
+                                               border: 1px solid var(--dori-product-border);
+                                               background: var(--dori-product-bg);
+                                               box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+                                               transition: all 0.2s;
+                                               display: flex;
+                                               flex-direction: column;
+                                               text-decoration: none;
+                                           "
+                                           onmouseover="this.style.boxShadow='0 4px 6px rgba(0,0,0,0.1)';this.style.transform='translateY(-2px)';"
+                                           onmouseout="this.style.boxShadow='rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px';this.style.transform='none';this.style.background='var(--dori-product-bg)'">
+                                            <img src="${product.image}" 
+                                                 alt="${product.name}" 
+                                                 style="object-fit: cover; height: 100px; width: 100%;">
+                                            <div style="padding: 8px; flex: 1; display: flex; flex-direction: column;">
+                                                <div style="font-size: 12px; font-weight: 600; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; color: var(--dori-text-color); direction: ${botData.texts.isRTL ? 'rtl' : 'ltr'}">
+                                                    ${product.name}
+                                                </div>
+                                                <div style="font-size: 12px; color: #3182CE; margin-top: auto; direction: ${botData.texts.isRTL ? 'rtl' : 'ltr'}">
+                                                    ${botData.texts.isRTL ? 
+                                                        `${Number(product.price).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ${botData.currency}` :
+                                                        `${botData.currency} ${Number(product.price).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`
+                                                    }
+                                                </div>
                                             </div>
                                         </a>
-                                    </div>
-                                `).join('')}
+                                    `).join('')}
+                                </div>
                             </div>
-                            <button class="dori-carousel-button right" onclick="scrollCarousel(this.parentElement, 200)">&#9654;</button>
+                            ${products.length > 3 ? `
+                                <div dir="ltr" style="font-size: 12px; color: var(--dori-subtext-color); margin-top: 8px; text-align: center; padding: 0 16px 16px;">
+                                    ← Scroll horizontally to see more products →
+                                </div>
+                            ` : ''}
                         </div>
                     `;
                 } catch (error) {
