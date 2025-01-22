@@ -1494,11 +1494,6 @@
                                     `).join('')}
                                 </div>
                             </div>
-                            ${products.length > 3 ? `
-                                <div dir="ltr" style="font-size: 12px; color: var(--dori-subtext-color); margin-top: 8px; text-align: center; padding: 0 16px 16px;">
-                                    ← Scroll horizontally to see more products →
-                                </div>
-                            ` : ''}
                         </div>
                     `;
                 } catch (error) {
