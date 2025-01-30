@@ -324,9 +324,9 @@
                 /* Chat Box Styles */
                 #dori-chat-box {
                     width: ${customization.appearance === 'sidebar' ? '400px' : '360px'};
-                    height: ${customization.appearance === 'sidebar' ? '100vh' : '65vh'};
-                    max-height: ${customization.appearance === 'sidebar' ? 'none' : '600px'};
-                    min-height: ${customization.appearance === 'sidebar' ? '100vh' : '350px'};
+                    height: ${customization.appearance === 'sidebar' ? '100dvh' : '65vh'};
+                    max-height: ${customization.appearance === 'sidebar' ? '100dvh' : '600px'};
+                    min-height: ${customization.appearance === 'sidebar' ? '100dvh' : '350px'};
                     border-radius: ${customization.appearance === 'sidebar' ? '0' : '16px'};
                     background-color: var(--dori-creamy);
                     color: var(--dori-text-color);
@@ -389,6 +389,7 @@
                     overflow-y: auto;
                     display: flex;
                     flex-direction: column;
+                    height: ${customization.appearance === 'sidebar' ? 'calc(100dvh - 130px)' : 'auto'};
                 }
 
                 .dori-message {
@@ -433,6 +434,10 @@
                     padding: 5px 13px;
                     background-color: var(--dori-input-bg);
                     border-top: 1px solid var(--dori-input-border);
+                    position: ${customization.appearance === 'sidebar' ? 'sticky' : 'relative'};
+                    bottom: 0;
+                    width: 100%;
+                    box-sizing: border-box;
                 }
 
                 #dori-chat-input {
