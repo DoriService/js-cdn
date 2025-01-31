@@ -1086,7 +1086,7 @@
                 // Create popup message element
                 const popupMessage = document.createElement('div');
                 popupMessage.className = 'dori-popup-message';
-                popupMessage.textContent = uiText.wellcomeMessage || uiText.popupMessage || 'Hello! What are you looking for?';
+                popupMessage.textContent = botData.wellcomeMessage || uiText.popupMessage || 'Hello! What are you looking for?';
                 document.body.appendChild(popupMessage);
                 
                 // Add the new SVG icon
