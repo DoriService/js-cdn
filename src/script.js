@@ -1,20 +1,4 @@
 (async function() {
-    // Add Google Tag Manager initialization at the start of the IIFE
-    function initGoogleTagManager() {
-        document.addEventListener('DOMContentLoaded', function() {
-            const script = document.createElement('script');
-            script.innerHTML = `
-                (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-                new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-                j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-                'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-                })(window,document,'script','dataLayer','GTM-KDZ57RV9');
-            `;
-            document.head.appendChild(script);
-        });
-    }
-
-    initGoogleTagManager();
 
     // Add Sentry initialization at the start of the IIFE
     function initSentry() {
@@ -61,103 +45,10 @@
     // Initialize Sentry before other operations
     initSentry();
 
-    // Add Google Analytics initialization function
-    function loadGoogleAnalytics() {
-        const measurementId = 'G-J5P2CETKPP';
-        return new Promise((resolve, reject) => {
-            const script = document.createElement('script');
-            script.src = `https://www.googletagmanager.com/gtag/js?id=${measurementId}`;
-            script.async = true;
-            script.onload = resolve;
-            script.onerror = reject;
-            document.head.appendChild(script);
 
-            window.dataLayer = window.dataLayer || [];
-            function gtag() {
-                dataLayer.push(arguments);
-            }
-            window.gtag = gtag;
-            gtag('js', new Date());
-            gtag('config', measurementId);
-        });
-    }
 
-    // Analytics tracking functions
-    const analytics = {
-        trackEvent: (eventName, params = {}) => {
-            if (window.gtag) {
-                // Add user ID to all events
-                const userId = getUserId();
-                const enhancedSharingId = `${botData.data.bot_name}-${botData.data.sharing_id}`;
-                window.gtag('event', eventName, {
-                    ...params,
-                    sharing_id: enhancedSharingId,
-                    userId: userId
-                });
-            }
-        },
-        trackChat: (action, label = '') => {
-            if (window.gtag) {
-                const userId = getUserId();
-                const botName = botData.data.bot_name || 'unknown';
-                const enhancedSharingId = `${botName}-${botData.data.sharing_id}`;
-                
-                // Map common actions to unique event names
-                const eventName = action === 'open' ? 'chat_opened' :
-                                action === 'message_sent' ? 'message_sent' :
-                                'chat_interaction';
-                window.gtag('event', eventName, {
-                    event_category: 'Chat',
-                    event_action: action,
-                    event_label: label,
-                    sharing_id: enhancedSharingId,
-                    userId: userId
-                });
-            }
-        }
-    };
 
-    // Function to generate and manage user ID
-    function getUserId() {
-        const cookieName = 'dori_user_id';
-        let userId = getCookie(cookieName);
-        
-        if (!userId) {
-            userId = generateUUID();
-            // Set cookie to expire in 2 years
-            setCookie(cookieName, userId, 730);
-        }
-        
-        return userId;
-    }
 
-    // Cookie utility functions
-    function setCookie(name, value, days) {
-        const date = new Date();
-        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-        const expires = `expires=${date.toUTCString()}`;
-        document.cookie = `${name}=${value};${expires};path=/;SameSite=Strict`;
-    }
-
-    function getCookie(name) {
-        const nameEQ = `${name}=`;
-        const ca = document.cookie.split(';');
-        for (let i = 0; i < ca.length; i++) {
-            let c = ca[i];
-            while (c.charAt(0) === ' ') c = c.substring(1, c.length);
-            if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
-        }
-        return null;
-    }
-
-    // UUID generation function
-    function generateUUID() {
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-            const r = Math.random() * 16 | 0;
-            const v = c === 'x' ? r : (r & 0x3 | 0x8);
-            return v.toString(16);
-        });
-    }
 
     try{    
         // Add viewport meta function before initChatWidget
@@ -176,11 +67,6 @@
         function initChatWidget(botData) {
             addViewportMeta();
             
-            loadGoogleAnalytics().catch(error => {
-                console.error('Failed to load Google Analytics:', error);
-            });
-
-
             // Inject Styles
             const style = document.createElement('style');
             const customization = botData.customization || {
@@ -1282,8 +1168,6 @@
                     chatButton.style.display = 'none';
                 }
                 
-                // Track chat open event
-                analytics.trackChat('open');
                 
                 // Handle positioning based on appearance mode
                 if (customization.appearance === 'sidebar') {
@@ -1326,9 +1210,6 @@
                 suggestedReplyElement.id = 'dori-suggested-reply';
                 suggestedReplyElement.textContent = replyText;
                 suggestedReplyElement.addEventListener('click', () => {
-                    // Track suggested reply click
-                    analytics.trackChat('suggested_reply_click', replyText);
-                    analytics.trackChat('message_sent', replyText);
                     
                     appendMessage('user', replyText);
                     const allSuggestions = chatMessages.querySelectorAll('#dori-suggested-reply');
@@ -1365,8 +1246,6 @@
                     });
                 }
                 
-                // Track chat close event
-                analytics.trackChat('close');
             }
 
             // Send Message Function
@@ -1376,8 +1255,6 @@
                     appendMessage('user', message);
                     chatInput.value = '';
                     
-                    // Track message sent event
-                    analytics.trackChat('message_sent', message.substring(0, 50));
                     
                     callApi(message);
                 }
@@ -1537,21 +1414,10 @@
             window.scrollCarousel = scrollCarousel;
             window.trackProductClick = function(productName, productPrice) {
                 try {
-                    if (!window.gtag) {
-                        console.warn('Google Analytics not initialized');
-                        return;
-                    }
                     if (!botData || !botData.sharing_id) {
                         console.warn('botData not properly initialized');
                         return;
                     }
-                    analytics.trackEvent('product_click', {
-                        event_category: 'Product',
-                        event_action: 'click',
-                        event_label: productName,
-                        price: productPrice,
-                        sharing_id: botData.sharing_id
-                    });
                     console.log('Product click tracked successfully');
                 } catch (error) {
                     console.error('Error tracking product click:', error);
@@ -1571,8 +1437,6 @@
                     sendButton.disabled = true;
                     const loadingMessage = appendMessage('bot', '<div class="dori-loading-dots"><span></span><span></span><span></span></div>');
 
-                    // Track API call start
-                    analytics.trackChat('api_call_start');
 
                     const requestBody = {
                         assistant_id: ASSISTANT_ID,
@@ -1695,8 +1559,6 @@
                     // Don't remove the loading message anymore since we reused it
                     currentBotMessage = null; // Reset for the next message
 
-                    // Track API call success
-                    analytics.trackChat('api_call_success');
 
                 } catch (error) {
                     console.error('Error:', error);
@@ -1715,8 +1577,6 @@
                     }
                     appendMessage('system', uiText.error);
                     
-                    // Track API call error
-                    analytics.trackChat('api_call_error', error.message);
                     
                 } finally {
                     sendButton.disabled = false;
