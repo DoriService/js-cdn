@@ -1330,6 +1330,13 @@
                 chatMessages.scrollTop = chatMessages.scrollHeight;
             }
 
+            const addUTMToChatWidgetUrl = (url) => {
+                const source = "dori";
+                const medium = "dori_widget";
+                const campaign = "dori_product_recommendation";
+                return `${url}?utm_source=${source}&utm_medium=${medium}&utm_campaign=${campaign}`;
+            };
+
             // Create Product HTML with Carousel
             function createProductHTML(products) {
                 try {
@@ -1338,7 +1345,7 @@
                             <div style="overflow-x: auto; scrollbar-width: thin; scrollbar-color: var(--dori-scrollbar-thumb) var(--dori-scrollbar-bg);">
                                 <div style="display: flex; gap: 8px; padding: 16px;">
                                     ${products.map(product => `
-                                        <a href="${product.url}" 
+                                        <a href="${addUTMToChatWidgetUrl(product.url)}" 
                                            target="_blank"
                                            rel="noopener noreferrer" 
                                            onclick="try { window.trackProductClick('${product.name.replace(/'/g, "\\'")}', ${product.price}); } catch(e) { console.error('Error in onclick:', e); }"
