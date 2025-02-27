@@ -1,14 +1,20 @@
-const path = require('path');
-const TerserPlugin = require('terser-webpack-plugin');
+import path from "path";
+import TerserPlugin from "terser-webpack-plugin";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
 
-module.exports = {
-  entry: './src/script.js',
+// Get the directory name from the module URL
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+export default {
+  entry: "./src/script.js",
   output: {
-    filename: 'script.js',
-    path: path.resolve(__dirname, 'dist'),
+    filename: "script.js",
+    path: path.resolve(__dirname, "dist"),
   },
   optimization: {
     minimize: true,
     minimizer: [new TerserPlugin()],
-  }
+  },
 };
