@@ -1,6 +1,6 @@
 import { addUTMToChatWidgetUrl } from "../utils/utm.js";
 // Create Product HTML with Carousel
-export function createProductCarouselInHTML(products) {
+export function createProductCarouselInHTML(products, botData) {
   try {
     return `
                 <div style="width: -webkit-fill-available ;margin: 0 -23px; background: var(--dori-message-bg-bot); border-top: 1px solid var(--dori-product-border); border-bottom: 1px solid var(--dori-product-border);">
@@ -74,6 +74,7 @@ export function createProductCarouselInHTML(products) {
                 </div>
             `;
   } catch (error) {
+    console.log("error mine", error);
     Sentry.captureException(error, {
       extra: {
         context: "createProductHTML",

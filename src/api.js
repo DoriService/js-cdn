@@ -126,7 +126,7 @@ export async function callStreamingApi(
                 updateLastAssistantMessage(fullMessage, chatMessages);
               }
             } else if (parsed.products) {
-              appendProducts(parsed.products, chatMessages);
+              appendProducts(parsed.products, chatMessages, botData);
             }
           } catch (err) {
             console.error("Failed to parse JSON:", err);
@@ -158,7 +158,7 @@ export async function callStreamingApi(
                 updateLastAssistantMessage(fullMessage, chatMessages);
               }
             } else if (parsed.products) {
-              appendProducts(parsed.products, chatMessages);
+              appendProducts(parsed.products, chatMessages, botData);
             }
             buffer = "";
           } catch (err) {
@@ -194,8 +194,8 @@ export async function callStreamingApi(
 }
 
 // Append Products to Chat
-function appendProducts(products, chatMessages) {
-  const productHTML = createProductCarouselInHTML(products);
+function appendProducts(products, chatMessages, botData) {
+  const productHTML = createProductCarouselInHTML(products, botData);
   const productContainer = document.createElement("div");
   productContainer.style.width = "100%";
   productContainer.style.margin = "12px 0";
