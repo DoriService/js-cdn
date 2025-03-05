@@ -1,4 +1,4 @@
-export const createPoweredBy = (customization) => {
+export const createPoweredBy = (customization, botData) => {
   // Add "Powered by Dori" footer
   const poweredBy = document.createElement("div");
   poweredBy.id = "dori-powered-by";
@@ -7,7 +7,7 @@ export const createPoweredBy = (customization) => {
   poweredBy.style.alignItems = "center"; // Center vertically
 
   const poweredByLink = document.createElement("a");
-  poweredByLink.href = "https://dori.tech";
+  poweredByLink.href = botData.logo_address_url;
   poweredByLink.target = "_blank";
   poweredByLink.style.textDecoration = "none";
   poweredByLink.style.display = "flex";
@@ -16,7 +16,9 @@ export const createPoweredBy = (customization) => {
   poweredByLink.style.justifyContent = "center";
   poweredByLink.innerHTML = `<span style="color: ${
     customization.theme === "light" ? "#666" : "#9CA3AF"
-  }">Powered by</span>&nbsp;&nbsp;<img src="https://dori.tech/assets/logo-BPyoLtnV.png" width="36" height="18" alt="Dori Logo">`;
+  }">Powered by</span>&nbsp;&nbsp;<img src=${botData.logo_url} width="${
+    botData.country === "iran" ? 60 : 36
+  }" height="18" alt="${botData.logo_alt}">`;
 
   poweredBy.appendChild(poweredByLink);
 

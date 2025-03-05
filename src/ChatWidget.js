@@ -76,17 +76,16 @@ export async function initChatWidget(botData) {
       chatBox,
       container,
       chatMessages,
-      sendButton
+      sendButton,
     },
     uiText
   );
 
   // Add "Powered by Dori" footer
-  const poweredBy = createPoweredBy(customization);
+  const poweredBy = createPoweredBy(customization, botData);
 
   const chatInputContainer = createChatInputContainer();
   const chatInput = createChatInput(uiText.inputPlaceholder);
-
 
   chatInputContainer.appendChild(chatInput);
   chatInputContainer.appendChild(sendButton);
