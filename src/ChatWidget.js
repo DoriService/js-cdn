@@ -141,29 +141,10 @@ export async function initChatWidget(botData) {
     }
   });
 
-  // Expose scrollCarousel and trackProductClick globally
+  // Expose scrollCarousel globally
   window.scrollCarousel = function (container, distance) {
     const carousel = container.querySelector(".dori-product-carousel");
     carousel.scrollBy({ left: distance, behavior: "smooth" });
-  };
-
-  window.trackProductClick = function (productName, productPrice) {
-    try {
-      if (!botData || !botData.sharing_id) {
-        console.warn("botData not properly initialized");
-        return;
-      }
-      console.log("Product click tracked successfully");
-    } catch (error) {
-      console.error("Error tracking product click:", error);
-      Sentry.captureException(error, {
-        extra: {
-          context: "trackProductClick",
-          productName,
-          productPrice,
-        },
-      });
-    }
   };
 
   // Add touch event handlers to prevent page scroll when scrolling chat

@@ -1,5 +1,6 @@
 import { createProductCarouselInHTML } from "./components/productCarousel.js";
 import { removeLastSystemMessage, appendMessage } from "./utils/chatUtils.js";
+import { urls } from "./utils/urls.js";
 
 // Send Message Function
 export function sendMessage(
@@ -27,7 +28,7 @@ export async function callStreamingApi(
   uiText
 ) {
   // Chat Functionality
-  const API_URL = botData.route + "/stream-chat-with-assistant/";
+  const API_URL = botData.route + urls.streamChat;
   const ASSISTANT_ID = botData.assistant_id;
   // let THREAD_ID = sessionStorage.getItem('thread_id') || null;
   let THREAD_ID = null;
