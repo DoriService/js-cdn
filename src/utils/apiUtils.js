@@ -1,4 +1,4 @@
-import { urls } from "./urls";
+import { urls } from "./urls.js";
 
 export async function fetchBotDataBySharingID(sharingID) {
   const url = urls.demoSharingData + sharingID;
