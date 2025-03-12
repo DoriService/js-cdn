@@ -1,7 +1,7 @@
-export const markDownParser = () => {
+export const markDownParser = (src) => {
   return new Promise((resolve, reject) => {
     const markdownScript = document.createElement("script");
-    markdownScript.src = "https://cdn.jsdelivr.net/npm/marked/marked.min.js";
+    markdownScript.src = src;
 
     markdownScript.onload = () => {
       console.log("Marked.js has been loaded.");

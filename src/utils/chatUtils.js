@@ -1,6 +1,12 @@
 import { callStreamingApi } from "../api.js";
 // Append Message to Chat
-export function appendMessage(sender, content, chatMessages, bot_image) {
+export function appendMessage(
+  sender,
+  content,
+  chatMessages,
+  bot_image,
+  avatarSrc
+) {
   try {
     const messageWrapper = document.createElement("div");
     messageWrapper.classList.add("dori-message-wrapper");
@@ -17,9 +23,7 @@ export function appendMessage(sender, content, chatMessages, bot_image) {
       // Create avatar image
       const avatar = document.createElement("img");
       avatar.classList.add("dori-avatar");
-      avatar.src =
-        bot_image ||
-        "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541";
+      avatar.src = bot_image || avatarSrc;
       avatar.alt = "Bot Avatar";
 
       messageWrapper.appendChild(avatar);
@@ -97,7 +101,8 @@ export function openChat(
   chatMessages,
   botData,
   elements,
-  uiText
+  uiText,
+  avatarSrc
 ) {
   const { chatBox, chatButton, container, sendButton } = elements;
   container.style.pointerEvents = "auto";
@@ -117,7 +122,13 @@ export function openChat(
   // Handle positioning based on appearance mode
   document.body.style.overflow = "hidden"; // Prevent body scroll when sidebar is open
   if (chatMessages.childElementCount === 0) {
-    appendMessage("bot", botData.wellcomeMessage, chatMessages, botData.bot_image);
+    appendMessage(
+      "bot",
+      botData.wellcomeMessage,
+      chatMessages,
+      botData.bot_image,
+      avatarSrc
+    );
     if (botData.suggestedReply) {
       try {
         // Try to parse as JSON in case it's a stringified array
@@ -131,7 +142,8 @@ export function openChat(
               chatMessages,
               botData,
               sendButton,
-              uiText
+              uiText,
+              avatarSrc
             );
           });
         }
@@ -142,7 +154,8 @@ export function openChat(
           chatMessages,
           botData,
           sendButton,
-          uiText
+          uiText,
+          avatarSrc
         );
       }
 
@@ -156,13 +169,20 @@ function createSuggestedReplyElement(
   chatMessages,
   botData,
   sendButton,
-  uiText
+  uiText,
+  avatarSrc
 ) {
   const suggestedReplyElement = document.createElement("div");
   suggestedReplyElement.id = "dori-suggested-reply";
   suggestedReplyElement.textContent = replyText;
   suggestedReplyElement.addEventListener("click", () => {
-    appendMessage("user", replyText, chatMessages,botData.bot_image);
+    appendMessage(
+      "user",
+      replyText,
+      chatMessages,
+      botData.bot_image,
+      avatarSrc
+    );
     const allSuggestions = chatMessages.querySelectorAll(
       "#dori-suggested-reply"
     );

@@ -18,7 +18,7 @@ const chatButtonHTML = `
             </span>
         `;
 
-export const createChatButton = (customization, botData, elements, uiText) => {
+export const createChatButton = (customization, botData, elements, uiText , avatarSrc) => {
   const { popupMessage, chatBox, container, chatMessages , sendButton } = elements;
   const chatButton = document.createElement("button");
   chatButton.id = "dori-chat-button";
@@ -86,7 +86,8 @@ export const createChatButton = (customization, botData, elements, uiText) => {
           container,
           sendButton
         },
-        uiText
+        uiText,
+        avatarSrc
       );
     }
   });

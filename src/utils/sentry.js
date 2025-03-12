@@ -1,7 +1,7 @@
 // Add Sentry initialization at the start of the IIFE
-export function initSentry() {
+export async function initSentry(src) {
   const script = document.createElement("script");
-  script.src = "https://browser.sentry-cdn.com/7.69.0/bundle.tracing.min.js";
+  script.src = src;
   script.crossOrigin = "anonymous";
 
   script.onload = () => {

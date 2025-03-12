@@ -21,11 +21,11 @@ import { markDownParser } from "./utils/markDownParser.js";
 
 import { sendMessage } from "./api.js";
 
-export async function initChatWidget(botData) {
+export async function initChatWidget(botData, markdownSrc, avatarSrc) {
   addViewportMeta();
 
   // Load marked.js for Markdown parsing
-  await markDownParser();
+  await markDownParser(markdownSrc);
 
   const customization = botData.customization || {
     appearance: "sidebar",
@@ -78,7 +78,8 @@ export async function initChatWidget(botData) {
       chatMessages,
       sendButton,
     },
-    uiText
+    uiText,
+    avatarSrc
   );
 
   // Add "Powered by Dori" footer

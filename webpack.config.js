@@ -8,7 +8,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 export default {
-  entry: "./src/script.js",
+  entry: "./src/wrapper.js",
   output: {
     filename: "script.js",
     path: path.resolve(__dirname, "dist"),
