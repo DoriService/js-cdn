@@ -8,5 +8,5 @@ import { script } from "./script.js";
   const markdownSrc = "https://cdn.jsdelivr.net/npm/marked/marked.min.js";
   const avatarSrc =
     "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541";
-  await script(sharingId, sentrySrc, markdownSrc);
+  await script(sharingId, sentrySrc, markdownSrc, avatarSrc);
 })();
